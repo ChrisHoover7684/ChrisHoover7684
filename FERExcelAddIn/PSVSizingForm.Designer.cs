@@ -87,11 +87,8 @@ namespace FERExcelAddIn
             this.inputGroupBox.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.resultsDataGridView)).BeginInit();
             this.buttonsPanel.SuspendLayout();
-            this.SuspendLayout();
-            //
-            // staggeredPsvsDataGridView
-            //
             this.staggeredPsvsDataGridView = new System.Windows.Forms.DataGridView();
+            this.SuspendLayout();
             //
             // mainTableLayout
             //
@@ -131,13 +128,13 @@ namespace FERExcelAddIn
             this.psvConfigGroupBox.Controls.Add(this.radSinglePSV);
             this.psvConfigGroupBox.Controls.Add(this.radMultiplePSV);
             this.psvConfigGroupBox.Controls.Add(this.chkFireCase);
-            this.psvConfigGroupBox.Controls.Add(this.staggeredPsvsDataGridView);
             this.psvConfigGroupBox.Location = new System.Drawing.Point(3, 3);
             this.psvConfigGroupBox.Name = "psvConfigGroupBox";
-            this.psvConfigGroupBox.Size = new System.Drawing.Size(238, 120);
+            this.psvConfigGroupBox.Size = new System.Drawing.Size(238, 320);
             this.psvConfigGroupBox.TabIndex = 0;
             this.psvConfigGroupBox.TabStop = false;
             this.psvConfigGroupBox.Text = "PSV Configuration";
+            this.psvConfigGroupBox.SuspendLayout();
             //
             // radSinglePSV
             //
@@ -179,6 +176,9 @@ namespace FERExcelAddIn
             this.staggeredPsvsDataGridView.Size = new System.Drawing.Size(200, 150);
             this.staggeredPsvsDataGridView.TabIndex = 3;
             this.staggeredPsvsDataGridView.Visible = false;
+            this.psvConfigGroupBox.Controls.Add(this.staggeredPsvsDataGridView);
+            this.psvConfigGroupBox.ResumeLayout(false);
+            this.psvConfigGroupBox.PerformLayout();
             //
             // lblFluidType
             //
