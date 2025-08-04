@@ -54,9 +54,6 @@ namespace FERExcelAddIn
             fluidTypeCombo.Items.Clear();
             fluidTypeCombo.Items.AddRange(MaterialDatabase.Materials.Keys.ToArray());
             fluidTypeCombo.SelectedIndex = 0; // Select first item
-
-            // Set up auto-loading of properties
-            fluidTypeCombo.SelectedIndexChanged += FluidTypeCombo_SelectedIndexChanged;
         }
 
         private void InitializeComponentDefaults()
@@ -87,7 +84,7 @@ namespace FERExcelAddIn
         {
             // Existing event wiring...
             fluidTypeCombo.SelectedIndexChanged += FluidTypeCombo_SelectedIndexChanged;
-            btnCalculate.Click += CalculateButton_Click;
+            btnCalculate.Click += CalculateAllScenarios;
             btnExcelExport.Click += InsertToExcelButton_Click;
 
             // Radio button events
@@ -144,7 +141,7 @@ namespace FERExcelAddIn
             // Optional: Auto-calculate if enabled
             if (autoCalculateCheckBox.Checked && ValidateInputs(silent: true))
             {
-                CalculateButton_Click(null, EventArgs.Empty);
+                CalculateAllScenarios(null, EventArgs.Empty);
             }
         }
 
@@ -221,7 +218,7 @@ namespace FERExcelAddIn
             // Optional: Auto-calculate if enabled
             if (autoCalculateCheckBox.Checked && ValidateInputs(silent: true))
             {
-                CalculateButton_Click(null, EventArgs.Empty);
+                CalculateAllScenarios(null, EventArgs.Empty);
             }
         }
 
@@ -230,7 +227,7 @@ namespace FERExcelAddIn
         {
             if (autoCalculateCheckBox.Checked && ValidateInputs(silent: true))
             {
-                CalculateButton_Click(null, EventArgs.Empty);
+                CalculateAllScenarios(null, EventArgs.Empty);
             }
         }
         private void SaveCustomMaterial()
@@ -403,7 +400,7 @@ namespace FERExcelAddIn
             // Update the label text
             lblFlowRate.Text = $"Flow Rate ({newUnit}):";
         }
-        private void CalculateButton_Click(object sender, EventArgs e)
+        private void CalculateAllScenarios(object sender, EventArgs e)
         {
             if (!ValidateInputs()) return;
 
@@ -549,70 +546,63 @@ namespace FERExcelAddIn
 
         private double GetScenarioFlowRate(string scenario, MaterialDatabase.Phase fluidType, double baseFlowRate)
         {
-            // Get vessel parameters
-            double mawp = double.Parse(txtMAWP.Text);
-            double designTemp = double.Parse(txtDesignTemp.Text);
-            double accumulation = 0.10; // Default
-
-            if (cmbAccumulation.SelectedIndex == 1) accumulation = 0.16;
-            else if (cmbAccumulation.SelectedIndex == 2) accumulation = 0.21;
-
             switch (scenario)
             {
                 case "Blocked Outlet":
-                    return baseFlowRate * (1 + accumulation); // Include accumulation
-
-                case "Fire Case (Pool/Enclosed)": // Updated from "External Fire (Wetted)"
-                    VesselGeometry geometry = new VesselGeometry
-                    {
-                        Type = chkHorizontalVessel.Checked ? VesselType.HorizontalCylindrical : VesselType.VerticalWithHeads,
-                        Diameter = double.Parse(vesselDiameterInput.Text),
-                        Length = double.Parse(vesselLengthInput.Text),
-                        Height = double.Parse(vesselLengthInput.Text) // Assuming Length is used for Height in vertical vessels
-                    };
-                    double fillLevel = double.Parse(txtFillLevel.Text) / 100;
-                    FireCaseCalculator fireCalc = new FireCaseCalculator();
-                    double wettedArea = fireCalc.CalculateWettedArea(geometry, fillLevel);
-                    return fireCalc.CalculateHeatInput(wettedArea, chkInsulated.Checked, chkWaterSpray.Checked, chkUnderground.Checked);
-
+                    return CalculateBlockedOutletFlowRate(baseFlowRate);
+                case "Fire Case (Pool/Enclosed)":
+                    return CalculateFireCaseFlowRate();
                 case "Thermal Expansion":
-                    double beta = GetExpansionCoefficient(fluidTypeCombo.SelectedItem.ToString());
-                    double volume = CalculateVesselVolume();
-                    return beta * volume * 50 / 3600; // Typical ΔT = 50°F/hr
-
+                    return CalculateThermalExpansionFlowRate();
                 case "Cooling Failure":
-                    return baseFlowRate * 1.5; // Simplified - would use actual heat input calcs
-
+                    return baseFlowRate * 1.5; // Simplified
                 case "Heat Exchanger Tube Rupture":
-                    return fluidType == MaterialDatabase.Phase.Liquid ? baseFlowRate * 2.5 : baseFlowRate * 3.0;
-
-                case "Chemical Reaction/Overpressure": // Updated from "Chemical Reaction"
-                    return baseFlowRate * 4.0; // Would use reaction kinetics
-
-                // --- New Scenarios with Placeholder Logic ---
+                    return (fluidType == MaterialDatabase.Phase.Liquid ? baseFlowRate * 2.5 : baseFlowRate * 3.0);
+                case "Chemical Reaction/Overpressure":
+                    return baseFlowRate * 4.0; // Simplified
                 case "Control Valve Failure":
-                    // Placeholder: Assumes valve fails open, leading to 125% of normal flow.
-                    return baseFlowRate * 1.25;
-
+                    return baseFlowRate * 1.25; // Placeholder
                 case "Power Failure":
-                    // Placeholder: Assumes loss of cooling, similar to cooling failure but could be different.
-                    return baseFlowRate * 1.6;
-
+                    return baseFlowRate * 1.6; // Placeholder
                 case "Hydraulic Hammer/Water Hammer":
-                    // Placeholder: Highly dependent on system specifics. This is a rough estimate.
-                    return baseFlowRate * 2.0;
-
+                    return baseFlowRate * 2.0; // Placeholder
                 case "Reflux Failure":
-                    // Placeholder: Assumes loss of reflux leads to increased vapor load.
-                    return baseFlowRate * 1.75;
-
+                    return baseFlowRate * 1.75; // Placeholder
                 case "Compressor/Expander Failure":
-                    // Placeholder: Assumes blocked discharge or other failure.
-                    return baseFlowRate * 1.4;
-
+                    return baseFlowRate * 1.4; // Placeholder
                 default:
                     return baseFlowRate;
             }
+        }
+
+        private double CalculateBlockedOutletFlowRate(double baseFlowRate)
+        {
+            double accumulation = 0.10; // Default
+            if (cmbAccumulation.SelectedIndex == 1) accumulation = 0.16;
+            else if (cmbAccumulation.SelectedIndex == 2) accumulation = 0.21;
+            return baseFlowRate * (1 + accumulation);
+        }
+
+        private double CalculateFireCaseFlowRate()
+        {
+            VesselGeometry geometry = new VesselGeometry
+            {
+                Type = chkHorizontalVessel.Checked ? VesselType.HorizontalCylindrical : VesselType.VerticalWithHeads,
+                Diameter = double.Parse(vesselDiameterInput.Text),
+                Length = double.Parse(vesselLengthInput.Text),
+                Height = double.Parse(vesselLengthInput.Text) // Assuming Length is used for Height
+            };
+            double fillLevel = double.Parse(txtFillLevel.Text) / 100;
+            FireCaseCalculator fireCalc = new FireCaseCalculator();
+            double wettedArea = fireCalc.CalculateWettedArea(geometry, fillLevel);
+            return fireCalc.CalculateHeatInput(wettedArea, chkInsulated.Checked, chkWaterSpray.Checked, chkUnderground.Checked);
+        }
+
+        private double CalculateThermalExpansionFlowRate()
+        {
+            double beta = GetExpansionCoefficient(fluidTypeCombo.SelectedItem.ToString());
+            double volume = CalculateVesselVolume();
+            return beta * volume * 50 / 3600; // Typical ΔT = 50°F/hr
         }
 
         private double CalculateWettedArea(double diameter, double length)
@@ -654,6 +644,10 @@ namespace FERExcelAddIn
             double length = double.Parse(vesselLengthInput.Text);
             return Math.PI * Math.Pow(diameter / 2, 2) * length;
         }
+        /// <summary>
+        /// Updates the flow rate units and converts the current value when the fluid type changes.
+        /// </summary>
+        /// <param name="fluidType">The new fluid type.</param>
         private void UpdateFlowRateUnits(string fluidType)
         {
             string currentUnit = lblFlowRate.Text.Contains("SCFM") ? "SCFM" : "lb/hr";
@@ -675,6 +669,8 @@ namespace FERExcelAddIn
                     convertedValue = ConvertSCFMToLbPerHour(currentValue,
                         double.Parse(molecularWeightInput.Text));
                 }
+                // WARNING: This automatically changes the user's input value.
+                // This might be unexpected from a user's perspective.
                 flowRateInput.Text = convertedValue.ToString("F2");
             }
 
@@ -995,51 +991,6 @@ namespace FERExcelAddIn
             }
         }
 
-        public static class FluidDatabase
-        {
-            private static readonly Dictionary<string, FluidProperties> _fluids =
-                new Dictionary<string, FluidProperties>()
-                {
-                    {
-                        "Water", new FluidProperties
-                        {
-                            MolecularWeight = 18.02,
-                            SpecificHeatRatio = 1.33,
-                            ThermalExpansionCoeff = 0.00012,
-                            Viscosity = 0.001
-                        }
-                    }
-                };
-
-            public static FluidProperties GetProperties(string fluidName)
-            {
-                if (_fluids.TryGetValue(fluidName, out var props))
-                    return props;
-
-                throw new KeyNotFoundException($"Fluid '{fluidName}' not in database");
-            }
-        }
-        private void btnCalculate_Click(object sender, EventArgs e)
-        {
-            if (!ValidateInputs()) return;
-
-            string selectedMaterial = fluidTypeCombo.SelectedItem.ToString();
-            MaterialDatabase.MaterialProperties props = MaterialDatabase.Materials[selectedMaterial];
-            double pressure = double.Parse(pressureInput.Text);
-            double temp = double.Parse(temperatureInput.Text);
-            double flow = double.Parse(flowRateInput.Text);
-
-            double area = CalculateOrificeArea(props.Type, pressure, temp, flow);
-            string orifice = DetermineOrificeSize(area);
-
-            // Update results grid
-            resultsDataGridView.Rows.Add(
-                "Current Scenario",
-                flow.ToString("F2"),
-                area.ToString("F6"),
-                orifice
-            );
-        }
         private void UpdateScenarioSpecificFields()
         {
             // Determine which scenarios are selected
