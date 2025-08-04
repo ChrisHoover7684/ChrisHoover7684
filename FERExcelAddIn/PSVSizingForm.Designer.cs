@@ -89,6 +89,10 @@ namespace FERExcelAddIn
             this.buttonsPanel.SuspendLayout();
             this.SuspendLayout();
             //
+            // staggeredPsvsDataGridView
+            //
+            this.staggeredPsvsDataGridView = new System.Windows.Forms.DataGridView();
+            //
             // mainTableLayout
             //
             this.mainTableLayout.ColumnCount = 2;
