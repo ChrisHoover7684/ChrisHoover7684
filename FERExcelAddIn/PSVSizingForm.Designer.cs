@@ -21,6 +21,17 @@ namespace FERExcelAddIn
         {
             this.components = new System.ComponentModel.Container();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.chkBlockedOutlet = new System.Windows.Forms.CheckBox();
+            this.chkExternalFire = new System.Windows.Forms.CheckBox();
+            this.chkCoolingFailure = new System.Windows.Forms.CheckBox();
+            this.chkTubeRupture = new System.Windows.Forms.CheckBox();
+            this.chkChemicalReaction = new System.Windows.Forms.CheckBox();
+            this.chkThermalExpansion = new System.Windows.Forms.CheckBox();
+            this.chkControlValveFailure = new System.Windows.Forms.CheckBox();
+            this.chkPowerFailure = new System.Windows.Forms.CheckBox();
+            this.chkHydraulicHammer = new System.Windows.Forms.CheckBox();
+            this.chkRefluxFailure = new System.Windows.Forms.CheckBox();
+            this.chkCompressorFailure = new System.Windows.Forms.CheckBox();
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.leftFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.psvConfigGroupBox = new System.Windows.Forms.GroupBox();
@@ -207,6 +218,12 @@ namespace FERExcelAddIn
             //
             // scenarioGroupBox
             //
+            this.scenarioGroupBox.Location = new System.Drawing.Point(3, 183);
+            this.scenarioGroupBox.Name = "scenarioGroupBox";
+            this.scenarioGroupBox.Size = new System.Drawing.Size(620, 222);
+            this.scenarioGroupBox.TabIndex = 2;
+            this.scenarioGroupBox.TabStop = false;
+            this.scenarioGroupBox.Text = "Sizing Scenarios";
             this.scenarioGroupBox.Controls.Add(this.chkCompressorFailure);
             this.scenarioGroupBox.Controls.Add(this.chkRefluxFailure);
             this.scenarioGroupBox.Controls.Add(this.chkHydraulicHammer);
@@ -218,12 +235,6 @@ namespace FERExcelAddIn
             this.scenarioGroupBox.Controls.Add(this.chkCoolingFailure);
             this.scenarioGroupBox.Controls.Add(this.chkTubeRupture);
             this.scenarioGroupBox.Controls.Add(this.chkChemicalReaction);
-            this.scenarioGroupBox.Location = new System.Drawing.Point(3, 183);
-            this.scenarioGroupBox.Name = "scenarioGroupBox";
-            this.scenarioGroupBox.Size = new System.Drawing.Size(620, 222);
-            this.scenarioGroupBox.TabIndex = 2;
-            this.scenarioGroupBox.TabStop = false;
-            this.scenarioGroupBox.Text = "Sizing Scenarios";
             //
             // chkBlockedOutlet
             //
