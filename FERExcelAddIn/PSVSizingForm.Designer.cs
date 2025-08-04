@@ -20,6 +20,7 @@ namespace FERExcelAddIn
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
             this.leftFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.psvConfigGroupBox = new System.Windows.Forms.GroupBox();
@@ -78,7 +79,6 @@ namespace FERExcelAddIn
             this.btnCalculate = new System.Windows.Forms.Button();
             this.autoCalculateCheckBox = new System.Windows.Forms.CheckBox();
             this.lblVesselOrientation = new System.Windows.Forms.Label();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.mainTableLayout.SuspendLayout();
             this.leftFlowPanel.SuspendLayout();
             this.psvConfigGroupBox.SuspendLayout();
