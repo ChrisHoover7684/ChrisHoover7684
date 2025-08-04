@@ -305,6 +305,6 @@ namespace FERExcelAddIn
             public bool IsSpecialCase { get; set; } = false;
         }
 
-        public enum Phase { Gas, Liquid, TwoPhase, Steam }
     }
+    public enum Phase { Gas, Liquid, TwoPhase, Steam }
 }

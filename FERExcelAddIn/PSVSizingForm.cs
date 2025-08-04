@@ -234,9 +234,9 @@ namespace FERExcelAddIn
         {
             var props = new MaterialDatabase.MaterialProperties
             {
-                Type = fluidTypeCombo.Text.Contains("Gas") ? MaterialDatabase.Phase.Gas :
-                      fluidTypeCombo.Text.Contains("Liquid") ? MaterialDatabase.Phase.Liquid :
-                      MaterialDatabase.Phase.TwoPhase,
+                Type = fluidTypeCombo.Text.Contains("Gas") ? Phase.Gas :
+                      fluidTypeCombo.Text.Contains("Liquid") ? Phase.Liquid :
+                      Phase.TwoPhase,
                 MolecularWeight = double.Parse(molecularWeightInput.Text),
                 SpecificHeatRatio = double.Parse(specificHeatRatioInput.Text),
                 Compressibility = double.Parse(compressibilityInput.Text),
@@ -262,18 +262,18 @@ namespace FERExcelAddIn
                 // Set phase-specific properties
                 switch (props.Type)
                 {
-                    case MaterialDatabase.Phase.Gas:
+                    case Phase.Gas:
                         specificHeatRatioInput.Text = props.SpecificHeatRatio.ToString("F3");
                         compressibilityInput.Text = props.Compressibility.ToString("F2");
                         specificGravityInput.Text = props.SpecificGravity.ToString("F3");
                         break;
 
-                    case MaterialDatabase.Phase.Liquid:
+                    case Phase.Liquid:
                         specificGravityInput.Text = props.SpecificGravityLiquid.ToString("F3");
                         viscosityInput.Text = props.Viscosity.ToString("F4");
                         break;
 
-                    case MaterialDatabase.Phase.TwoPhase:
+                    case Phase.TwoPhase:
                         specificHeatRatioInput.Text = props.SpecificHeatRatio.ToString("F3");
                         compressibilityInput.Text = props.Compressibility.ToString("F2");
                         specificGravityInput.Text = props.SpecificGravityVapor.ToString("F3");
@@ -331,7 +331,7 @@ namespace FERExcelAddIn
                 // Set visibility based on phase
                 switch (props.Type)
                 {
-                    case MaterialDatabase.Phase.Gas:
+                    case Phase.Gas:
                         // Gas phase - show gas-specific fields
                         molecularWeightInput.Visible = true;
                         lblMolecularWeight.Visible = true;
@@ -345,7 +345,7 @@ namespace FERExcelAddIn
                         lblSpecificGravity.Visible = true;
                         break;
 
-                    case MaterialDatabase.Phase.Liquid:
+                    case Phase.Liquid:
                         // Liquid phase - show liquid-specific fields
                         molecularWeightInput.Visible = false;
                         lblMolecularWeight.Visible = false;
@@ -359,7 +359,7 @@ namespace FERExcelAddIn
                         lblSpecificGravity.Visible = true;
                         break;
 
-                    case MaterialDatabase.Phase.TwoPhase:
+                    case Phase.TwoPhase:
                         // Two-phase - show combination of fields
                         molecularWeightInput.Visible = true;
                         lblMolecularWeight.Visible = true;
@@ -378,18 +378,18 @@ namespace FERExcelAddIn
                 UpdateFlowRateUnits(selectedMaterial, props.Type);
             }
         }
-        private void UpdateFlowRateUnits(string fluidName, MaterialDatabase.Phase phase)
+        private void UpdateFlowRateUnits(string fluidName, Phase phase)
         {
             string newUnit;
             switch (phase)
             {
-                case MaterialDatabase.Phase.Gas:
+                case Phase.Gas:
                     newUnit = "SCFM";
                     break;
-                case MaterialDatabase.Phase.Liquid:
+                case Phase.Liquid:
                     newUnit = "gpm";
                     break;
-                case MaterialDatabase.Phase.TwoPhase:
+                case Phase.TwoPhase:
                     newUnit = "lb/hr";
                     break;
                 default:
@@ -429,7 +429,7 @@ namespace FERExcelAddIn
                     double scenarioFlowRate = GetScenarioFlowRate(scenario, props.Type, flowRate);
 
                     // Convert flow rate to proper units if needed
-                    if (props.Type == MaterialDatabase.Phase.Gas && lblFlowRate.Text.Contains("SCFM"))
+                    if (props.Type == Phase.Gas && lblFlowRate.Text.Contains("SCFM"))
                     {
                         scenarioFlowRate = ConvertSCFMToLbPerHour(scenarioFlowRate, molecularWeight);
                     }
@@ -544,7 +544,7 @@ namespace FERExcelAddIn
             }
         }
 
-        private double GetScenarioFlowRate(string scenario, MaterialDatabase.Phase fluidType, double baseFlowRate)
+        private double GetScenarioFlowRate(string scenario, Phase fluidType, double baseFlowRate)
         {
             switch (scenario)
             {
@@ -557,7 +557,7 @@ namespace FERExcelAddIn
                 case "Cooling Failure":
                     return baseFlowRate * 1.5; // Simplified
                 case "Heat Exchanger Tube Rupture":
-                    return (fluidType == MaterialDatabase.Phase.Liquid ? baseFlowRate * 2.5 : baseFlowRate * 3.0);
+                    return (fluidType == Phase.Liquid ? baseFlowRate * 2.5 : baseFlowRate * 3.0);
                 case "Chemical Reaction/Overpressure":
                     return baseFlowRate * 4.0; // Simplified
                 case "Control Valve Failure":
@@ -692,7 +692,7 @@ namespace FERExcelAddIn
             // Inverse conversion: lb/hr = SCFM * (MW / 379.3) * 60
             return scfm * (molecularWeight / 379.3) * 60;
         }
-        private double CalculateOrificeArea(MaterialDatabase.Phase fluidType, double setPressure, double temperature, double flowRate)
+        private double CalculateOrificeArea(Phase fluidType, double setPressure, double temperature, double flowRate)
         {
             // Get accumulation percentage (10%, 16%, or 21%)
             double accumulation = GetAccumulationPercentage();
@@ -707,7 +707,7 @@ namespace FERExcelAddIn
 
             double area = 0;
 
-            if (fluidType == MaterialDatabase.Phase.Gas)
+            if (fluidType == Phase.Gas)
             {
                 // API 520 Part I Eq. 3 (US Customary units)
                 double rCritical = Math.Pow(2 / (heatRatio + 1), heatRatio / (heatRatio - 1));
@@ -716,7 +716,7 @@ namespace FERExcelAddIn
                 area = (flowRate / (315 * kb * 0.975 * relievingPressure * rCritical)) *
                        Math.Sqrt((compressibility * (temperature + 459.67) * molecularWeight) / heatRatio);
             }
-            else if (fluidType == MaterialDatabase.Phase.Liquid)
+            else if (fluidType == Phase.Liquid)
             {
                 double specificGravity = double.Parse(specificGravityInput.Text);
                 double viscosity = double.Parse(viscosityInput.Text);
