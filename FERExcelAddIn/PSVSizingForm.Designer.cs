@@ -127,6 +127,7 @@ namespace FERExcelAddIn
             this.psvConfigGroupBox.Controls.Add(this.radSinglePSV);
             this.psvConfigGroupBox.Controls.Add(this.radMultiplePSV);
             this.psvConfigGroupBox.Controls.Add(this.chkFireCase);
+            this.psvConfigGroupBox.Controls.Add(this.staggeredPsvsDataGridView);
             this.psvConfigGroupBox.Location = new System.Drawing.Point(3, 3);
             this.psvConfigGroupBox.Name = "psvConfigGroupBox";
             this.psvConfigGroupBox.Size = new System.Drawing.Size(238, 120);
@@ -165,6 +166,15 @@ namespace FERExcelAddIn
             this.chkFireCase.TabIndex = 2;
             this.chkFireCase.Text = "Fire Case";
             this.chkFireCase.UseVisualStyleBackColor = true;
+            //
+            // staggeredPsvsDataGridView
+            //
+            this.staggeredPsvsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.staggeredPsvsDataGridView.Location = new System.Drawing.Point(20, 150);
+            this.staggeredPsvsDataGridView.Name = "staggeredPsvsDataGridView";
+            this.staggeredPsvsDataGridView.Size = new System.Drawing.Size(200, 150);
+            this.staggeredPsvsDataGridView.TabIndex = 3;
+            this.staggeredPsvsDataGridView.Visible = false;
             //
             // lblFluidType
             //
@@ -673,7 +683,8 @@ namespace FERExcelAddIn
             this.colScenario,
             this.colFlowRate,
             this.colArea,
-            this.colOrificeSize});
+            this.colOrificeSize,
+            this.colSetPressure});
             this.resultsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.resultsDataGridView.Location = new System.Drawing.Point(3, 724);
             this.resultsDataGridView.Name = "resultsDataGridView";
@@ -715,6 +726,14 @@ namespace FERExcelAddIn
             this.colOrificeSize.Name = "colOrificeSize";
             this.colOrificeSize.ReadOnly = true;
             this.colOrificeSize.Width = 150;
+            //
+            // colSetPressure
+            //
+            this.colSetPressure.HeaderText = "Set Pressure (psig)";
+            this.colSetPressure.MinimumWidth = 8;
+            this.colSetPressure.Name = "colSetPressure";
+            this.colSetPressure.ReadOnly = true;
+            this.colSetPressure.Width = 150;
             //
             // buttonsPanel
             //
@@ -853,11 +872,13 @@ namespace FERExcelAddIn
         private System.Windows.Forms.DataGridViewTextBoxColumn colFlowRate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colArea;
         private System.Windows.Forms.DataGridViewTextBoxColumn colOrificeSize;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSetPressure;
         private System.Windows.Forms.Panel buttonsPanel;
         internal System.Windows.Forms.Button btnExcelExport;
         internal System.Windows.Forms.Button btnCalculate;
         internal System.Windows.Forms.CheckBox autoCalculateCheckBox;
         private System.Windows.Forms.ToolTip toolTip1;
         internal System.Windows.Forms.Label lblFluidType;
+        internal DataGridView staggeredPsvsDataGridView;
     }
 }

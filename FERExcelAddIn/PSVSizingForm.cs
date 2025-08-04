@@ -46,6 +46,9 @@ namespace FERExcelAddIn
             SetupScenarios();
             WireUpEvents();
             InitializeMaterialDatabase();
+
+            // Add columns to the staggered PSVs grid
+            staggeredPsvsDataGridView.Columns.Add("SetPressure", "Set Pressure (psig)");
         }
 
         private void InitializeMaterialDatabase()
@@ -138,10 +141,38 @@ namespace FERExcelAddIn
             // Radio buttons are mutually exclusive by default, so we just need to update settings
             UpdateAccumulationSettings();
 
+            if (radMultiplePSV.Checked || chkFireCase.Checked)
+            {
+                staggeredPsvsDataGridView.Visible = true;
+                PopulateStaggeredPsvsGrid();
+            }
+            else
+            {
+                staggeredPsvsDataGridView.Visible = false;
+            }
+
             // Optional: Auto-calculate if enabled
             if (autoCalculateCheckBox.Checked && ValidateInputs(silent: true))
             {
                 CalculateAllScenarios(null, EventArgs.Empty);
+            }
+        }
+
+        private void PopulateStaggeredPsvsGrid()
+        {
+            staggeredPsvsDataGridView.Rows.Clear();
+            double mainSetPressure = double.Parse(pressureInput.Text);
+
+            if (chkFireCase.Checked)
+            {
+                staggeredPsvsDataGridView.Rows.Add(mainSetPressure.ToString("F2"));
+                staggeredPsvsDataGridView.Rows.Add((mainSetPressure * 1.05).ToString("F2"));
+                staggeredPsvsDataGridView.Rows.Add((mainSetPressure * 1.10).ToString("F2"));
+            }
+            else if (radMultiplePSV.Checked)
+            {
+                staggeredPsvsDataGridView.Rows.Add(mainSetPressure.ToString("F2"));
+                staggeredPsvsDataGridView.Rows.Add((mainSetPressure * 1.05).ToString("F2"));
             }
         }
 
@@ -414,41 +445,68 @@ namespace FERExcelAddIn
             }
 
             // Get common parameters once
-            double setPressure = double.Parse(pressureInput.Text);
             double temperature = double.Parse(temperatureInput.Text);
             double flowRate = double.Parse(flowRateInput.Text);
             string selectedMaterial = fluidTypeCombo.SelectedItem.ToString();
             MaterialDatabase.MaterialProperties props = MaterialDatabase.Materials[selectedMaterial];
             double molecularWeight = double.Parse(molecularWeightInput.Text);
 
-            foreach (var scenario in scenarios)
+            if (staggeredPsvsDataGridView.Visible)
             {
-                try
+                // Staggered PSV calculation
+                double totalFlowRate = 0;
+                foreach (var scenario in scenarios)
                 {
-                    // Get scenario-specific flow rate
-                    double scenarioFlowRate = GetScenarioFlowRate(scenario, props.Type, flowRate);
+                    totalFlowRate += GetScenarioFlowRate(scenario, props.Type, flowRate);
+                }
 
-                    // Convert flow rate to proper units if needed
-                    if (props.Type == Phase.Gas && lblFlowRate.Text.Contains("SCFM"))
-                    {
-                        scenarioFlowRate = ConvertSCFMToLbPerHour(scenarioFlowRate, molecularWeight);
-                    }
+                double flowPerPsv = totalFlowRate / staggeredPsvsDataGridView.Rows.Count;
 
-                    // Calculate area
-                    double area = CalculateOrificeArea(props.Type, setPressure, temperature, scenarioFlowRate);
+                foreach (DataGridViewRow row in staggeredPsvsDataGridView.Rows)
+                {
+                    if (row.IsNewRow) continue;
+                    double setPressure = double.Parse(row.Cells[0].Value.ToString());
+                    double area = CalculateOrificeArea(props.Type, setPressure, temperature, flowPerPsv);
                     string orificeSize = DetermineOrificeSize(area);
 
-                    // Add to results
                     resultsDataGridView.Rows.Add(
-                        scenario,
-                        scenarioFlowRate.ToString("F2"),
+                        "Staggered PSV",
+                        flowPerPsv.ToString("F2"),
                         area.ToString("F6"),
-                        orificeSize
+                        orificeSize,
+                        setPressure.ToString("F2")
                     );
                 }
-                catch (Exception ex)
+            }
+            else
+            {
+                // Single PSV calculation
+                foreach (var scenario in scenarios)
                 {
-                    MessageBox.Show($"Error calculating {scenario}: {ex.Message}");
+                    try
+                    {
+                        double setPressure = double.Parse(pressureInput.Text);
+                        double scenarioFlowRate = GetScenarioFlowRate(scenario, props.Type, flowRate);
+
+                        if (props.Type == Phase.Gas && lblFlowRate.Text.Contains("SCFM"))
+                        {
+                            scenarioFlowRate = ConvertSCFMToLbPerHour(scenarioFlowRate, molecularWeight);
+                        }
+
+                        double area = CalculateOrificeArea(props.Type, setPressure, temperature, scenarioFlowRate);
+                        string orificeSize = DetermineOrificeSize(area);
+
+                        resultsDataGridView.Rows.Add(
+                            scenario,
+                            scenarioFlowRate.ToString("F2"),
+                            area.ToString("F6"),
+                            orificeSize
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show($"Error calculating {scenario}: {ex.Message}");
+                    }
                 }
             }
         }
