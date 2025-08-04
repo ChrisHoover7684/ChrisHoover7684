@@ -21,6 +21,11 @@ namespace FERExcelAddIn
         {
             this.components = new System.ComponentModel.Container();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.colScenario = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colFlowRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colArea = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colOrificeSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSetPressure = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.chkBlockedOutlet = new System.Windows.Forms.CheckBox();
             this.chkExternalFire = new System.Windows.Forms.CheckBox();
             this.chkCoolingFailure = new System.Windows.Forms.CheckBox();
@@ -709,46 +714,6 @@ namespace FERExcelAddIn
             this.resultsDataGridView.RowTemplate.Height = 28;
             this.resultsDataGridView.Size = new System.Drawing.Size(694, 304);
             this.resultsDataGridView.TabIndex = 2;
-            //
-            // colScenario
-            //
-            this.colScenario.HeaderText = "Scenario";
-            this.colScenario.MinimumWidth = 8;
-            this.colScenario.Name = "colScenario";
-            this.colScenario.ReadOnly = true;
-            this.colScenario.Width = 150;
-            //
-            // colFlowRate
-            //
-            this.colFlowRate.HeaderText = "Flow Rate";
-            this.colFlowRate.MinimumWidth = 8;
-            this.colFlowRate.Name = "colFlowRate";
-            this.colFlowRate.ReadOnly = true;
-            this.colFlowRate.Width = 150;
-            //
-            // colArea
-            //
-            this.colArea.HeaderText = "Area (in²)";
-            this.colArea.MinimumWidth = 8;
-            this.colArea.Name = "colArea";
-            this.colArea.ReadOnly = true;
-            this.colArea.Width = 150;
-            //
-            // colOrificeSize
-            //
-            this.colOrificeSize.HeaderText = "Orifice Size";
-            this.colOrificeSize.MinimumWidth = 8;
-            this.colOrificeSize.Name = "colOrificeSize";
-            this.colOrificeSize.ReadOnly = true;
-            this.colOrificeSize.Width = 150;
-            //
-            // colSetPressure
-            //
-            this.colSetPressure.HeaderText = "Set Pressure (psig)";
-            this.colSetPressure.MinimumWidth = 8;
-            this.colSetPressure.Name = "colSetPressure";
-            this.colSetPressure.ReadOnly = true;
-            this.colSetPressure.Width = 150;
             //
             // buttonsPanel
             //
