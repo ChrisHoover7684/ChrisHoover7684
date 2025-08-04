@@ -106,7 +106,7 @@ namespace FERExcelAddIn
 
             // Scenario checkboxes
             chkBlockedOutlet.CheckedChanged += ScenarioCheckbox_Changed;
-            chkExternalFire.CheckedChanged += ScenarioCheckbox_Changed;
+            chkExternalFire.CheckedChanged += chkExternalFire_CheckedChanged;
             chkCoolingFailure.CheckedChanged += ScenarioCheckbox_Changed;
             chkTubeRupture.CheckedChanged += ScenarioCheckbox_Changed;
             chkChemicalReaction.CheckedChanged += ScenarioCheckbox_Changed;
@@ -555,21 +555,29 @@ namespace FERExcelAddIn
                 case "Thermal Expansion":
                     return CalculateThermalExpansionFlowRate();
                 case "Cooling Failure":
-                    return baseFlowRate * 1.5; // Simplified
+                    // Simplified - would use actual heat input calculations
+                    return baseFlowRate * 1.5;
                 case "Heat Exchanger Tube Rupture":
+                    // Simplified - based on typical flow rates
                     return (fluidType == Phase.Liquid ? baseFlowRate * 2.5 : baseFlowRate * 3.0);
                 case "Chemical Reaction/Overpressure":
-                    return baseFlowRate * 4.0; // Simplified
+                    // Simplified - would use reaction kinetics
+                    return baseFlowRate * 4.0;
                 case "Control Valve Failure":
-                    return baseFlowRate * 1.25; // Placeholder
+                    // Placeholder - Assumes valve fails open, leading to 125% of normal flow.
+                    return baseFlowRate * 1.25;
                 case "Power Failure":
-                    return baseFlowRate * 1.6; // Placeholder
+                    // Placeholder - Assumes loss of cooling, similar to cooling failure but could be different.
+                    return baseFlowRate * 1.6;
                 case "Hydraulic Hammer/Water Hammer":
-                    return baseFlowRate * 2.0; // Placeholder
+                    // Placeholder - Highly dependent on system specifics. This is a rough estimate.
+                    return baseFlowRate * 2.0;
                 case "Reflux Failure":
-                    return baseFlowRate * 1.75; // Placeholder
+                    // Placeholder - Assumes loss of reflux leads to increased vapor load.
+                    return baseFlowRate * 1.75;
                 case "Compressor/Expander Failure":
-                    return baseFlowRate * 1.4; // Placeholder
+                    // Placeholder - Assumes blocked discharge or other failure.
+                    return baseFlowRate * 1.4;
                 default:
                     return baseFlowRate;
             }
@@ -725,6 +733,12 @@ namespace FERExcelAddIn
                 // API 520 Part I Eq. 7
                 area = (flowRate / (38 * 0.65 * kv)) *
                        Math.Sqrt(specificGravity / (relievingPressure - setPressure));
+            }
+            else if (fluidType == Phase.Steam)
+            {
+                // Napier's equation for critical flow of steam
+                double C = 0.975; // Coefficient of discharge
+                area = flowRate / (51.45 * relievingPressure * C);
             }
 
             return area > 0.000001 ? area : 0;
@@ -945,7 +959,7 @@ namespace FERExcelAddIn
                 return FIRE_CALCULATION_FACTOR * F * Math.Pow(wettedArea, 0.82);
             }
 
-            public static double GetEnvironmentalFactor(bool isInsulated, bool hasWaterSpray, bool isUnderground)
+            private double GetEnvironmentalFactor(bool isInsulated, bool hasWaterSpray, bool isUnderground)
             {
                 // API 521 Table 5
                 if (isInsulated) return 0.3;
