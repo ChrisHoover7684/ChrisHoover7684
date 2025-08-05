@@ -20,20 +20,51 @@ namespace FERExcelAddIn
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
-            this.leftFlowPanel = new System.Windows.Forms.FlowLayoutPanel();
-            this.psvConfigGroupBox = new System.Windows.Forms.GroupBox();
-            this.radSinglePSV = new System.Windows.Forms.RadioButton();
-            this.radMultiplePSV = new System.Windows.Forms.RadioButton();
-            this.chkFireCase = new System.Windows.Forms.CheckBox();
-            this.lblFluidType = new System.Windows.Forms.Label();
-            this.fluidTypeCombo = new System.Windows.Forms.ComboBox();
-            this.scenarioGroupBox = new System.Windows.Forms.GroupBox();
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.chkBlockedOutlet = new System.Windows.Forms.CheckBox();
             this.chkExternalFire = new System.Windows.Forms.CheckBox();
             this.chkCoolingFailure = new System.Windows.Forms.CheckBox();
             this.chkTubeRupture = new System.Windows.Forms.CheckBox();
             this.chkChemicalReaction = new System.Windows.Forms.CheckBox();
+            this.chkThermalExpansion = new System.Windows.Forms.CheckBox();
+            this.chkControlValveFailure = new System.Windows.Forms.CheckBox();
+            this.chkPowerFailure = new System.Windows.Forms.CheckBox();
+            this.chkHydraulicHammer = new System.Windows.Forms.CheckBox();
+            this.chkRefluxFailure = new System.Windows.Forms.CheckBox();
+            this.chkCompressorFailure = new System.Windows.Forms.CheckBox();
+            this.btnExcelExport = new System.Windows.Forms.Button();
+            this.btnCalculate = new System.Windows.Forms.Button();
+            this.autoCalculateCheckBox = new System.Windows.Forms.CheckBox();
+            this.mainTableLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabInputs = new System.Windows.Forms.TabPage();
+            this.inputsTableLayout = new System.Windows.Forms.TableLayoutPanel();
+            this.psvConfigGroupBox = new System.Windows.Forms.GroupBox();
+            this.radSinglePSV = new System.Windows.Forms.RadioButton();
+            this.radMultiplePSV = new System.Windows.Forms.RadioButton();
+            this.chkFireCase = new System.Windows.Forms.CheckBox();
+            this.staggeredPsvsDataGridView = new System.Windows.Forms.DataGridView();
+            this.fluidPropertiesGroupBox = new System.Windows.Forms.GroupBox();
+            this.lblFluidType = new System.Windows.Forms.Label();
+            this.fluidTypeCombo = new System.Windows.Forms.ComboBox();
+            this.lblPressure = new System.Windows.Forms.Label();
+            this.pressureInput = new System.Windows.Forms.TextBox();
+            this.lblTemperature = new System.Windows.Forms.Label();
+            this.temperatureInput = new System.Windows.Forms.TextBox();
+            this.lblFlowRate = new System.Windows.Forms.Label();
+            this.flowRateInput = new System.Windows.Forms.TextBox();
+            this.lblMolecularWeight = new System.Windows.Forms.Label();
+            this.molecularWeightInput = new System.Windows.Forms.TextBox();
+            this.lblSpecificHeatRatio = new System.Windows.Forms.Label();
+            this.specificHeatRatioInput = new System.Windows.Forms.TextBox();
+            this.lblCompressibility = new System.Windows.Forms.Label();
+            this.compressibilityInput = new System.Windows.Forms.TextBox();
+            this.lblViscosity = new System.Windows.Forms.Label();
+            this.viscosityInput = new System.Windows.Forms.TextBox();
+            this.lblSpecificGravity = new System.Windows.Forms.Label();
+            this.specificGravityInput = new System.Windows.Forms.TextBox();
+            this.lblOperatingPressure = new System.Windows.Forms.Label();
+            this.operatingPressureInput = new System.Windows.Forms.TextBox();
             this.vesselDesignGroupBox = new System.Windows.Forms.GroupBox();
             this.lblMAWP = new System.Windows.Forms.Label();
             this.txtMAWP = new System.Windows.Forms.TextBox();
@@ -51,85 +82,256 @@ namespace FERExcelAddIn
             this.chkInsulated = new System.Windows.Forms.CheckBox();
             this.chkWaterSpray = new System.Windows.Forms.CheckBox();
             this.chkUnderground = new System.Windows.Forms.CheckBox();
-            this.inputGroupBox = new System.Windows.Forms.GroupBox();
-            this.lblPressure = new System.Windows.Forms.Label();
-            this.pressureInput = new System.Windows.Forms.TextBox();
-            this.lblTemperature = new System.Windows.Forms.Label();
-            this.temperatureInput = new System.Windows.Forms.TextBox();
-            this.lblFlowRate = new System.Windows.Forms.Label();
-            this.flowRateInput = new System.Windows.Forms.TextBox();
-            this.lblMolecularWeight = new System.Windows.Forms.Label();
-            this.molecularWeightInput = new System.Windows.Forms.TextBox();
-            this.lblSpecificHeatRatio = new System.Windows.Forms.Label();
-            this.specificHeatRatioInput = new System.Windows.Forms.TextBox();
-            this.lblCompressibility = new System.Windows.Forms.Label();
-            this.compressibilityInput = new System.Windows.Forms.TextBox();
-            this.lblViscosity = new System.Windows.Forms.Label();
-            this.viscosityInput = new System.Windows.Forms.TextBox();
-            this.lblSpecificGravity = new System.Windows.Forms.Label();
-            this.specificGravityInput = new System.Windows.Forms.TextBox();
+            this.lblVesselOrientation = new System.Windows.Forms.Label();
+            this.tabScenarios = new System.Windows.Forms.TabPage();
+            this.scenarioGroupBox = new System.Windows.Forms.GroupBox();
+            this.tabResults = new System.Windows.Forms.TabPage();
             this.resultsDataGridView = new System.Windows.Forms.DataGridView();
             this.colScenario = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colFlowRate = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colArea = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colOrificeSize = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colSetPressure = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.buttonsPanel = new System.Windows.Forms.Panel();
-            this.btnExcelExport = new System.Windows.Forms.Button();
-            this.btnCalculate = new System.Windows.Forms.Button();
-            this.autoCalculateCheckBox = new System.Windows.Forms.CheckBox();
-            this.lblVesselOrientation = new System.Windows.Forms.Label();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.mainTableLayout.SuspendLayout();
-            this.leftFlowPanel.SuspendLayout();
+            this.tabControl.SuspendLayout();
+            this.tabInputs.SuspendLayout();
+            this.inputsTableLayout.SuspendLayout();
             this.psvConfigGroupBox.SuspendLayout();
-            this.scenarioGroupBox.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.staggeredPsvsDataGridView)).BeginInit();
+            this.fluidPropertiesGroupBox.SuspendLayout();
             this.vesselDesignGroupBox.SuspendLayout();
-            this.inputGroupBox.SuspendLayout();
+            this.tabScenarios.SuspendLayout();
+            this.scenarioGroupBox.SuspendLayout();
+            this.tabResults.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.resultsDataGridView)).BeginInit();
             this.buttonsPanel.SuspendLayout();
             this.SuspendLayout();
             //
+            // chkBlockedOutlet
+            //
+            this.chkBlockedOutlet.AutoSize = true;
+            this.chkBlockedOutlet.Checked = true;
+            this.chkBlockedOutlet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.chkBlockedOutlet.Location = new System.Drawing.Point(20, 30);
+            this.chkBlockedOutlet.Name = "chkBlockedOutlet";
+            this.chkBlockedOutlet.Size = new System.Drawing.Size(139, 24);
+            this.chkBlockedOutlet.TabIndex = 0;
+            this.chkBlockedOutlet.Text = "Blocked Outlet";
+            this.toolTip1.SetToolTip(this.chkBlockedOutlet, "Blocked Outlet (Single valve or full system blockage)");
+            this.chkBlockedOutlet.UseVisualStyleBackColor = true;
+            //
+            // chkExternalFire
+            //
+            this.chkExternalFire.AutoSize = true;
+            this.chkExternalFire.Location = new System.Drawing.Point(20, 70);
+            this.chkExternalFire.Name = "chkExternalFire";
+            this.chkExternalFire.Size = new System.Drawing.Size(124, 24);
+            this.chkExternalFire.TabIndex = 1;
+            this.chkExternalFire.Text = "External Fire";
+            this.toolTip1.SetToolTip(this.chkExternalFire, "External fire exposure scenario");
+            this.chkExternalFire.UseVisualStyleBackColor = true;
+            //
+            // chkCoolingFailure
+            //
+            this.chkCoolingFailure.AutoSize = true;
+            this.chkCoolingFailure.Location = new System.Drawing.Point(20, 110);
+            this.chkCoolingFailure.Name = "chkCoolingFailure";
+            this.chkCoolingFailure.Size = new System.Drawing.Size(140, 24);
+            this.chkCoolingFailure.TabIndex = 2;
+            this.chkCoolingFailure.Text = "Cooling Failure";
+            this.toolTip1.SetToolTip(this.chkCoolingFailure, "Failure of cooling system");
+            this.chkCoolingFailure.UseVisualStyleBackColor = true;
+            //
+            // chkTubeRupture
+            //
+            this.chkTubeRupture.AutoSize = true;
+            this.chkTubeRupture.Location = new System.Drawing.Point(20, 150);
+            this.chkTubeRupture.Name = "chkTubeRupture";
+            this.chkTubeRupture.Size = new System.Drawing.Size(133, 24);
+            this.chkTubeRupture.TabIndex = 3;
+            this.chkTubeRupture.Text = "Tube Rupture";
+            this.toolTip1.SetToolTip(this.chkTubeRupture, "Heat exchanger tube rupture scenario");
+            this.chkTubeRupture.UseVisualStyleBackColor = true;
+            //
+            // chkChemicalReaction
+            //
+            this.chkChemicalReaction.AutoSize = true;
+            this.chkChemicalReaction.Location = new System.Drawing.Point(20, 190);
+            this.chkChemicalReaction.Name = "chkChemicalReaction";
+            this.chkChemicalReaction.Size = new System.Drawing.Size(168, 24);
+            this.chkChemicalReaction.TabIndex = 4;
+            this.chkChemicalReaction.Text = "Chemical Reaction";
+            this.toolTip1.SetToolTip(this.chkChemicalReaction, "Runaway chemical reaction scenario");
+            this.chkChemicalReaction.UseVisualStyleBackColor = true;
+            //
+            // chkThermalExpansion
+            //
+            this.chkThermalExpansion.AutoSize = true;
+            this.chkThermalExpansion.Location = new System.Drawing.Point(20, 230);
+            this.chkThermalExpansion.Name = "chkThermalExpansion";
+            this.chkThermalExpansion.Size = new System.Drawing.Size(170, 24);
+            this.chkThermalExpansion.TabIndex = 5;
+            this.chkThermalExpansion.Text = "Thermal Expansion";
+            this.toolTip1.SetToolTip(this.chkThermalExpansion, "Thermal expansion of trapped liquids");
+            this.chkThermalExpansion.UseVisualStyleBackColor = true;
+            //
+            // chkControlValveFailure
+            //
+            this.chkControlValveFailure.AutoSize = true;
+            this.chkControlValveFailure.Location = new System.Drawing.Point(20, 270);
+            this.chkControlValveFailure.Name = "chkControlValveFailure";
+            this.chkControlValveFailure.Size = new System.Drawing.Size(181, 24);
+            this.chkControlValveFailure.TabIndex = 6;
+            this.chkControlValveFailure.Text = "Control Valve Failure";
+            this.toolTip1.SetToolTip(this.chkControlValveFailure, "Control valve failure in open position");
+            this.chkControlValveFailure.UseVisualStyleBackColor = true;
+            //
+            // chkPowerFailure
+            //
+            this.chkPowerFailure.AutoSize = true;
+            this.chkPowerFailure.Location = new System.Drawing.Point(20, 310);
+            this.chkPowerFailure.Name = "chkPowerFailure";
+            this.chkPowerFailure.Size = new System.Drawing.Size(131, 24);
+            this.chkPowerFailure.TabIndex = 7;
+            this.chkPowerFailure.Text = "Power Failure";
+            this.toolTip1.SetToolTip(this.chkPowerFailure, "Total power failure scenario");
+            this.chkPowerFailure.UseVisualStyleBackColor = true;
+            //
+            // chkHydraulicHammer
+            //
+            this.chkHydraulicHammer.AutoSize = true;
+            this.chkHydraulicHammer.Location = new System.Drawing.Point(20, 350);
+            this.chkHydraulicHammer.Name = "chkHydraulicHammer";
+            this.chkHydraulicHammer.Size = new System.Drawing.Size(165, 24);
+            this.chkHydraulicHammer.TabIndex = 8;
+            this.chkHydraulicHammer.Text = "Hydraulic Hammer";
+            this.toolTip1.SetToolTip(this.chkHydraulicHammer, "Hydraulic hammer scenario");
+            this.chkHydraulicHammer.UseVisualStyleBackColor = true;
+            //
+            // chkRefluxFailure
+            //
+            this.chkRefluxFailure.AutoSize = true;
+            this.chkRefluxFailure.Location = new System.Drawing.Point(20, 390);
+            this.chkRefluxFailure.Name = "chkRefluxFailure";
+            this.chkRefluxFailure.Size = new System.Drawing.Size(132, 24);
+            this.chkRefluxFailure.TabIndex = 9;
+            this.chkRefluxFailure.Text = "Reflux Failure";
+            this.toolTip1.SetToolTip(this.chkRefluxFailure, "Reflux system failure");
+            this.chkRefluxFailure.UseVisualStyleBackColor = true;
+            //
+            // chkCompressorFailure
+            //
+            this.chkCompressorFailure.AutoSize = true;
+            this.chkCompressorFailure.Location = new System.Drawing.Point(20, 430);
+            this.chkCompressorFailure.Name = "chkCompressorFailure";
+            this.chkCompressorFailure.Size = new System.Drawing.Size(173, 24);
+            this.chkCompressorFailure.TabIndex = 10;
+            this.chkCompressorFailure.Text = "Compressor Failure";
+            this.toolTip1.SetToolTip(this.chkCompressorFailure, "Compressor failure scenario");
+            this.chkCompressorFailure.UseVisualStyleBackColor = true;
+            //
+            // btnExcelExport
+            //
+            this.btnExcelExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnExcelExport.Location = new System.Drawing.Point(1076, 20);
+            this.btnExcelExport.Name = "btnExcelExport";
+            this.btnExcelExport.Size = new System.Drawing.Size(200, 50);
+            this.btnExcelExport.TabIndex = 2;
+            this.btnExcelExport.Text = "Export to Excel";
+            this.toolTip1.SetToolTip(this.btnExcelExport, "Export results to Excel");
+            this.btnExcelExport.UseVisualStyleBackColor = true;
+            //
+            // btnCalculate
+            //
+            this.btnCalculate.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCalculate.Location = new System.Drawing.Point(826, 20);
+            this.btnCalculate.Name = "btnCalculate";
+            this.btnCalculate.Size = new System.Drawing.Size(200, 50);
+            this.btnCalculate.TabIndex = 1;
+            this.btnCalculate.Text = "Calculate";
+            this.toolTip1.SetToolTip(this.btnCalculate, "Perform PSV sizing calculations");
+            this.btnCalculate.UseVisualStyleBackColor = true;
+            //
+            // autoCalculateCheckBox
+            //
+            this.autoCalculateCheckBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.autoCalculateCheckBox.AutoSize = true;
+            this.autoCalculateCheckBox.Checked = true;
+            this.autoCalculateCheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.autoCalculateCheckBox.Location = new System.Drawing.Point(832, 90);
+            this.autoCalculateCheckBox.Name = "autoCalculateCheckBox";
+            this.autoCalculateCheckBox.Size = new System.Drawing.Size(139, 24);
+            this.autoCalculateCheckBox.TabIndex = 0;
+            this.autoCalculateCheckBox.Text = "Auto Calculate";
+            this.toolTip1.SetToolTip(this.autoCalculateCheckBox, "Recalculate automatically when inputs change");
+            this.autoCalculateCheckBox.UseVisualStyleBackColor = true;
+            //
             // mainTableLayout
             //
-            this.mainTableLayout.ColumnCount = 2;
-            this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle());
+            this.mainTableLayout.ColumnCount = 1;
             this.mainTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.mainTableLayout.Controls.Add(this.leftFlowPanel, 0, 0);
-            this.mainTableLayout.Controls.Add(this.inputGroupBox, 1, 0);
-            this.mainTableLayout.Controls.Add(this.resultsDataGridView, 0, 1);
-            this.mainTableLayout.Controls.Add(this.buttonsPanel, 1, 1);
+            this.mainTableLayout.Controls.Add(this.tabControl, 0, 0);
+            this.mainTableLayout.Controls.Add(this.buttonsPanel, 0, 1);
             this.mainTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
             this.mainTableLayout.Location = new System.Drawing.Point(0, 0);
             this.mainTableLayout.Name = "mainTableLayout";
             this.mainTableLayout.RowCount = 2;
-            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 70F));
-            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 30F));
-            this.mainTableLayout.Size = new System.Drawing.Size(1168, 1031);
+            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 85F));
+            this.mainTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 15F));
+            this.mainTableLayout.Size = new System.Drawing.Size(1344, 1031);
             this.mainTableLayout.TabIndex = 0;
             //
-            // leftFlowPanel
+            // tabControl
             //
-            this.leftFlowPanel.Controls.Add(this.psvConfigGroupBox);
-            this.leftFlowPanel.Controls.Add(this.lblFluidType);
-            this.leftFlowPanel.Controls.Add(this.fluidTypeCombo);
-            this.leftFlowPanel.Controls.Add(this.scenarioGroupBox);
-            this.leftFlowPanel.Controls.Add(this.vesselDesignGroupBox);
-            this.leftFlowPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.leftFlowPanel.FlowDirection = System.Windows.Forms.FlowDirection.TopDown;
-            this.leftFlowPanel.Location = new System.Drawing.Point(3, 3);
-            this.leftFlowPanel.Name = "leftFlowPanel";
-            this.leftFlowPanel.Size = new System.Drawing.Size(694, 715);
-            this.leftFlowPanel.TabIndex = 0;
-            this.leftFlowPanel.WrapContents = false;
+            this.tabControl.Controls.Add(this.tabInputs);
+            this.tabControl.Controls.Add(this.tabScenarios);
+            this.tabControl.Controls.Add(this.tabResults);
+            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabControl.Location = new System.Drawing.Point(3, 3);
+            this.tabControl.Name = "tabControl";
+            this.tabControl.SelectedIndex = 0;
+            this.tabControl.Size = new System.Drawing.Size(1338, 870);
+            this.tabControl.TabIndex = 0;
+            //
+            // tabInputs
+            //
+            this.tabInputs.Controls.Add(this.inputsTableLayout);
+            this.tabInputs.Location = new System.Drawing.Point(4, 29);
+            this.tabInputs.Name = "tabInputs";
+            this.tabInputs.Padding = new System.Windows.Forms.Padding(3);
+            this.tabInputs.Size = new System.Drawing.Size(1330, 837);
+            this.tabInputs.TabIndex = 0;
+            this.tabInputs.Text = "Input Parameters";
+            this.tabInputs.UseVisualStyleBackColor = true;
+            //
+            // inputsTableLayout
+            //
+            this.inputsTableLayout.ColumnCount = 2;
+            this.inputsTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.inputsTableLayout.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.inputsTableLayout.Controls.Add(this.psvConfigGroupBox, 0, 0);
+            this.inputsTableLayout.Controls.Add(this.fluidPropertiesGroupBox, 0, 1);
+            this.inputsTableLayout.Controls.Add(this.vesselDesignGroupBox, 1, 0);
+            this.inputsTableLayout.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.inputsTableLayout.Location = new System.Drawing.Point(3, 3);
+            this.inputsTableLayout.Name = "inputsTableLayout";
+            this.inputsTableLayout.RowCount = 2;
+            this.inputsTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.inputsTableLayout.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.inputsTableLayout.Size = new System.Drawing.Size(1324, 831);
+            this.inputsTableLayout.TabIndex = 0;
             //
             // psvConfigGroupBox
             //
             this.psvConfigGroupBox.Controls.Add(this.radSinglePSV);
             this.psvConfigGroupBox.Controls.Add(this.radMultiplePSV);
             this.psvConfigGroupBox.Controls.Add(this.chkFireCase);
+            this.psvConfigGroupBox.Controls.Add(this.staggeredPsvsDataGridView);
+            this.psvConfigGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.psvConfigGroupBox.Location = new System.Drawing.Point(3, 3);
             this.psvConfigGroupBox.Name = "psvConfigGroupBox";
-            this.psvConfigGroupBox.Size = new System.Drawing.Size(238, 120);
+            this.psvConfigGroupBox.Size = new System.Drawing.Size(656, 409);
             this.psvConfigGroupBox.TabIndex = 0;
             this.psvConfigGroupBox.TabStop = false;
             this.psvConfigGroupBox.Text = "PSV Configuration";
@@ -166,19 +368,57 @@ namespace FERExcelAddIn
             this.chkFireCase.Text = "Fire Case";
             this.chkFireCase.UseVisualStyleBackColor = true;
             //
+            // staggeredPsvsDataGridView
+            //
+            this.staggeredPsvsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.staggeredPsvsDataGridView.Location = new System.Drawing.Point(20, 120);
+            this.staggeredPsvsDataGridView.Name = "staggeredPsvsDataGridView";
+            this.staggeredPsvsDataGridView.RowHeadersWidth = 62;
+            this.staggeredPsvsDataGridView.Size = new System.Drawing.Size(586, 180);
+            this.staggeredPsvsDataGridView.TabIndex = 3;
+            this.staggeredPsvsDataGridView.Visible = false;
+            //
+            // fluidPropertiesGroupBox
+            //
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblFluidType);
+            this.fluidPropertiesGroupBox.Controls.Add(this.fluidTypeCombo);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblPressure);
+            this.fluidPropertiesGroupBox.Controls.Add(this.pressureInput);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblTemperature);
+            this.fluidPropertiesGroupBox.Controls.Add(this.temperatureInput);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblFlowRate);
+            this.fluidPropertiesGroupBox.Controls.Add(this.flowRateInput);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblMolecularWeight);
+            this.fluidPropertiesGroupBox.Controls.Add(this.molecularWeightInput);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblSpecificHeatRatio);
+            this.fluidPropertiesGroupBox.Controls.Add(this.specificHeatRatioInput);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblCompressibility);
+            this.fluidPropertiesGroupBox.Controls.Add(this.compressibilityInput);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblViscosity);
+            this.fluidPropertiesGroupBox.Controls.Add(this.viscosityInput);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblSpecificGravity);
+            this.fluidPropertiesGroupBox.Controls.Add(this.specificGravityInput);
+            this.fluidPropertiesGroupBox.Controls.Add(this.lblOperatingPressure);
+            this.fluidPropertiesGroupBox.Controls.Add(this.operatingPressureInput);
+            this.fluidPropertiesGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.fluidPropertiesGroupBox.Location = new System.Drawing.Point(3, 418);
+            this.fluidPropertiesGroupBox.Name = "fluidPropertiesGroupBox";
+            this.fluidPropertiesGroupBox.Size = new System.Drawing.Size(656, 410);
+            this.fluidPropertiesGroupBox.TabIndex = 1;
+            this.fluidPropertiesGroupBox.TabStop = false;
+            this.fluidPropertiesGroupBox.Text = "Fluid Properties";
+            //
             // lblFluidType
             //
-            this.lblFluidType.Anchor = System.Windows.Forms.AnchorStyles.Left;
             this.lblFluidType.AutoSize = true;
-            this.lblFluidType.Location = new System.Drawing.Point(3, 126);
+            this.lblFluidType.Location = new System.Drawing.Point(20, 30);
             this.lblFluidType.Name = "lblFluidType";
             this.lblFluidType.Size = new System.Drawing.Size(85, 20);
-            this.lblFluidType.TabIndex = 11;
+            this.lblFluidType.TabIndex = 0;
             this.lblFluidType.Text = "Fluid Type:";
             //
             // fluidTypeCombo
             //
-            this.fluidTypeCombo.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.fluidTypeCombo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.fluidTypeCombo.FormattingEnabled = true;
             this.fluidTypeCombo.Items.AddRange(new object[] {
@@ -186,149 +426,163 @@ namespace FERExcelAddIn
             "Liquid",
             "Steam",
             "Two-Phase"});
-            this.fluidTypeCombo.Location = new System.Drawing.Point(232, 149);
+            this.fluidTypeCombo.Location = new System.Drawing.Point(250, 25);
             this.fluidTypeCombo.Name = "fluidTypeCombo";
-            this.fluidTypeCombo.Size = new System.Drawing.Size(162, 28);
+            this.fluidTypeCombo.Size = new System.Drawing.Size(200, 28);
             this.fluidTypeCombo.TabIndex = 1;
             //
-            // scenarioGroupBox
+            // lblPressure
             //
-            this.scenarioGroupBox.Controls.Add(this.chkCompressorFailure);
-            this.scenarioGroupBox.Controls.Add(this.chkRefluxFailure);
-            this.scenarioGroupBox.Controls.Add(this.chkHydraulicHammer);
-            this.scenarioGroupBox.Controls.Add(this.chkPowerFailure);
-            this.scenarioGroupBox.Controls.Add(this.chkControlValveFailure);
-            this.scenarioGroupBox.Controls.Add(this.chkThermalExpansion);
-            this.scenarioGroupBox.Controls.Add(this.chkBlockedOutlet);
-            this.scenarioGroupBox.Controls.Add(this.chkExternalFire);
-            this.scenarioGroupBox.Controls.Add(this.chkCoolingFailure);
-            this.scenarioGroupBox.Controls.Add(this.chkTubeRupture);
-            this.scenarioGroupBox.Controls.Add(this.chkChemicalReaction);
-            this.scenarioGroupBox.Location = new System.Drawing.Point(3, 183);
-            this.scenarioGroupBox.Name = "scenarioGroupBox";
-            this.scenarioGroupBox.Size = new System.Drawing.Size(620, 222);
-            this.scenarioGroupBox.TabIndex = 2;
-            this.scenarioGroupBox.TabStop = false;
-            this.scenarioGroupBox.Text = "Sizing Scenarios";
+            this.lblPressure.AutoSize = true;
+            this.lblPressure.Location = new System.Drawing.Point(20, 70);
+            this.lblPressure.Name = "lblPressure";
+            this.lblPressure.Size = new System.Drawing.Size(114, 20);
+            this.lblPressure.TabIndex = 2;
+            this.lblPressure.Text = "Pressure psig):";
             //
-            // chkBlockedOutlet
+            // pressureInput
             //
-            this.chkBlockedOutlet.AutoSize = true;
-            this.chkBlockedOutlet.Checked = true;
-            this.chkBlockedOutlet.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.chkBlockedOutlet.Location = new System.Drawing.Point(20, 30);
-            this.chkBlockedOutlet.Name = "chkBlockedOutlet";
-            this.chkBlockedOutlet.Size = new System.Drawing.Size(139, 24);
-            this.chkBlockedOutlet.TabIndex = 0;
-            this.chkBlockedOutlet.Text = "Blocked Outlet";
-            this.toolTip1.SetToolTip(this.chkBlockedOutlet, "Blocked Outlet (Single valve or full system blockage)");
-            this.chkBlockedOutlet.UseVisualStyleBackColor = true;
+            this.pressureInput.Location = new System.Drawing.Point(250, 65);
+            this.pressureInput.Name = "pressureInput";
+            this.pressureInput.Size = new System.Drawing.Size(100, 26);
+            this.pressureInput.TabIndex = 3;
+            this.pressureInput.Text = "100";
             //
-            // chkExternalFire
+            // lblTemperature
             //
-            this.chkExternalFire.AutoSize = true;
-            this.chkExternalFire.Location = new System.Drawing.Point(20, 60);
-            this.chkExternalFire.Name = "chkExternalFire";
-            this.chkExternalFire.Size = new System.Drawing.Size(250, 24);
-            this.chkExternalFire.TabIndex = 1;
-            this.chkExternalFire.Text = "Fire Case (Pool/Enclosed)";
-            this.toolTip1.SetToolTip(this.chkExternalFire, "Fire Case (Open pool fire, enclosed fire)");
-            this.chkExternalFire.UseVisualStyleBackColor = true;
+            this.lblTemperature.AutoSize = true;
+            this.lblTemperature.Location = new System.Drawing.Point(20, 110);
+            this.lblTemperature.Name = "lblTemperature";
+            this.lblTemperature.Size = new System.Drawing.Size(133, 20);
+            this.lblTemperature.TabIndex = 4;
+            this.lblTemperature.Text = "Temperature (°F):";
             //
-            // chkCoolingFailure
+            // temperatureInput
             //
-            this.chkCoolingFailure.AutoSize = true;
-            this.chkCoolingFailure.Location = new System.Drawing.Point(20, 90);
-            this.chkCoolingFailure.Name = "chkCoolingFailure";
-            this.chkCoolingFailure.Size = new System.Drawing.Size(140, 24);
-            this.chkCoolingFailure.TabIndex = 2;
-            this.chkCoolingFailure.Text = "Cooling Failure";
-            this.chkCoolingFailure.UseVisualStyleBackColor = true;
+            this.temperatureInput.Location = new System.Drawing.Point(250, 105);
+            this.temperatureInput.Name = "temperatureInput";
+            this.temperatureInput.Size = new System.Drawing.Size(100, 26);
+            this.temperatureInput.TabIndex = 5;
+            this.temperatureInput.Text = "60";
             //
-            // chkTubeRupture
+            // lblFlowRate
             //
-            this.chkTubeRupture.AutoSize = true;
-            this.chkTubeRupture.Location = new System.Drawing.Point(20, 120);
-            this.chkTubeRupture.Name = "chkTubeRupture";
-            this.chkTubeRupture.Size = new System.Drawing.Size(242, 24);
-            this.chkTubeRupture.TabIndex = 3;
-            this.chkTubeRupture.Text = "Heat Exchanger Tube Rupture";
-            this.chkTubeRupture.UseVisualStyleBackColor = true;
+            this.lblFlowRate.AutoSize = true;
+            this.lblFlowRate.Location = new System.Drawing.Point(20, 150);
+            this.lblFlowRate.Name = "lblFlowRate";
+            this.lblFlowRate.Size = new System.Drawing.Size(85, 20);
+            this.lblFlowRate.TabIndex = 6;
+            this.lblFlowRate.Text = "Flow Rate:";
             //
-            // chkChemicalReaction
+            // flowRateInput
             //
-            this.chkChemicalReaction.AutoSize = true;
-            this.chkChemicalReaction.Location = new System.Drawing.Point(20, 150);
-            this.chkChemicalReaction.Name = "chkChemicalReaction";
-            this.chkChemicalReaction.Size = new System.Drawing.Size(262, 24);
-            this.chkChemicalReaction.TabIndex = 4;
-            this.chkChemicalReaction.Text = "Chemical Reaction/Overpressure";
-            this.toolTip1.SetToolTip(this.chkChemicalReaction, "Chemical Reaction/Overpressure (Runaway reactions)");
-            this.chkChemicalReaction.UseVisualStyleBackColor = true;
+            this.flowRateInput.Location = new System.Drawing.Point(250, 145);
+            this.flowRateInput.Name = "flowRateInput";
+            this.flowRateInput.Size = new System.Drawing.Size(100, 26);
+            this.flowRateInput.TabIndex = 7;
+            this.flowRateInput.Text = "500";
             //
-            // chkThermalExpansion
+            // lblMolecularWeight
             //
-            this.chkThermalExpansion.AutoSize = true;
-            this.chkThermalExpansion.Location = new System.Drawing.Point(20, 180);
-            this.chkThermalExpansion.Name = "chkThermalExpansion";
-            this.chkThermalExpansion.Size = new System.Drawing.Size(174, 24);
-            this.chkThermalExpansion.TabIndex = 5;
-            this.chkThermalExpansion.Text = "Thermal Expansion";
-            this.toolTip1.SetToolTip(this.chkThermalExpansion, "Thermal Expansion (Liquid-filled equipment heating)");
-            this.chkThermalExpansion.UseVisualStyleBackColor = true;
+            this.lblMolecularWeight.AutoSize = true;
+            this.lblMolecularWeight.Location = new System.Drawing.Point(20, 190);
+            this.lblMolecularWeight.Name = "lblMolecularWeight";
+            this.lblMolecularWeight.Size = new System.Drawing.Size(187, 20);
+            this.lblMolecularWeight.TabIndex = 8;
+            this.lblMolecularWeight.Text = "Molecular Weight (g/mol):";
             //
-            // chkControlValveFailure
+            // molecularWeightInput
             //
-            this.chkControlValveFailure.AutoSize = true;
-            this.chkControlValveFailure.Location = new System.Drawing.Point(300, 30);
-            this.chkControlValveFailure.Name = "chkControlValveFailure";
-            this.chkControlValveFailure.Size = new System.Drawing.Size(191, 24);
-            this.chkControlValveFailure.TabIndex = 6;
-            this.chkControlValveFailure.Text = "Control Valve Failure";
-            this.toolTip1.SetToolTip(this.chkControlValveFailure, "Control Valve Failure (Fail-open/closed, misoperation)");
-            this.chkControlValveFailure.UseVisualStyleBackColor = true;
+            this.molecularWeightInput.Location = new System.Drawing.Point(250, 185);
+            this.molecularWeightInput.Name = "molecularWeightInput";
+            this.molecularWeightInput.Size = new System.Drawing.Size(100, 26);
+            this.molecularWeightInput.TabIndex = 9;
+            this.molecularWeightInput.Text = "28.97";
             //
-            // chkPowerFailure
+            // lblSpecificHeatRatio
             //
-            this.chkPowerFailure.AutoSize = true;
-            this.chkPowerFailure.Location = new System.Drawing.Point(300, 60);
-            this.chkPowerFailure.Name = "chkPowerFailure";
-            this.chkPowerFailure.Size = new System.Drawing.Size(134, 24);
-            this.chkPowerFailure.TabIndex = 7;
-            this.chkPowerFailure.Text = "Power Failure";
-            this.toolTip1.SetToolTip(this.chkPowerFailure, "Power Failure (Loss of utilities like cooling, reflux, etc.)");
-            this.chkPowerFailure.UseVisualStyleBackColor = true;
+            this.lblSpecificHeatRatio.AutoSize = true;
+            this.lblSpecificHeatRatio.Location = new System.Drawing.Point(20, 230);
+            this.lblSpecificHeatRatio.Name = "lblSpecificHeatRatio";
+            this.lblSpecificHeatRatio.Size = new System.Drawing.Size(223, 20);
+            this.lblSpecificHeatRatio.TabIndex = 10;
+            this.lblSpecificHeatRatio.Text = "Specific Heat Ratio (k=Cp/Cv):";
             //
-            // chkHydraulicHammer
+            // specificHeatRatioInput
             //
-            this.chkHydraulicHammer.AutoSize = true;
-            this.chkHydraulicHammer.Location = new System.Drawing.Point(300, 90);
-            this.chkHydraulicHammer.Name = "chkHydraulicHammer";
-            this.chkHydraulicHammer.Size = new System.Drawing.Size(269, 24);
-            this.chkHydraulicHammer.TabIndex = 8;
-            this.chkHydraulicHammer.Text = "Hydraulic Hammer/Water Hammer";
-            this.chkHydraulicHammer.UseVisualStyleBackColor = true;
+            this.specificHeatRatioInput.Location = new System.Drawing.Point(250, 225);
+            this.specificHeatRatioInput.Name = "specificHeatRatioInput";
+            this.specificHeatRatioInput.Size = new System.Drawing.Size(100, 26);
+            this.specificHeatRatioInput.TabIndex = 11;
+            this.specificHeatRatioInput.Text = "1.4";
             //
-            // chkRefluxFailure
+            // lblCompressibility
             //
-            this.chkRefluxFailure.AutoSize = true;
-            this.chkRefluxFailure.Location = new System.Drawing.Point(300, 120);
-            this.chkRefluxFailure.Name = "chkRefluxFailure";
-            this.chkRefluxFailure.Size = new System.Drawing.Size(135, 24);
-            this.chkRefluxFailure.TabIndex = 9;
-            this.chkRefluxFailure.Text = "Reflux Failure";
-            this.toolTip1.SetToolTip(this.chkRefluxFailure, "Reflux Failure (Distillation columns)");
-            this.chkRefluxFailure.UseVisualStyleBackColor = true;
+            this.lblCompressibility.AutoSize = true;
+            this.lblCompressibility.Location = new System.Drawing.Point(20, 270);
+            this.lblCompressibility.Name = "lblCompressibility";
+            this.lblCompressibility.Size = new System.Drawing.Size(192, 20);
+            this.lblCompressibility.TabIndex = 12;
+            this.lblCompressibility.Text = "Compressibility Factor (Z):";
             //
-            // chkCompressorFailure
+            // compressibilityInput
             //
-            this.chkCompressorFailure.AutoSize = true;
-            this.chkCompressorFailure.Location = new System.Drawing.Point(300, 150);
-            this.chkCompressorFailure.Name = "chkCompressorFailure";
-            this.chkCompressorFailure.Size = new System.Drawing.Size(249, 24);
-            this.chkCompressorFailure.TabIndex = 10;
-            this.chkCompressorFailure.Text = "Compressor/Expander Failure";
-            this.chkCompressorFailure.UseVisualStyleBackColor = true;
+            this.compressibilityInput.Location = new System.Drawing.Point(250, 265);
+            this.compressibilityInput.Name = "compressibilityInput";
+            this.compressibilityInput.Size = new System.Drawing.Size(100, 26);
+            this.compressibilityInput.TabIndex = 13;
+            this.compressibilityInput.Text = "1.0";
+            //
+            // lblViscosity
+            //
+            this.lblViscosity.AutoSize = true;
+            this.lblViscosity.Location = new System.Drawing.Point(20, 310);
+            this.lblViscosity.Name = "lblViscosity";
+            this.lblViscosity.Size = new System.Drawing.Size(107, 20);
+            this.lblViscosity.TabIndex = 14;
+            this.lblViscosity.Text = "Viscosity (cP):";
+            //
+            // viscosityInput
+            //
+            this.viscosityInput.Location = new System.Drawing.Point(250, 305);
+            this.viscosityInput.Name = "viscosityInput";
+            this.viscosityInput.Size = new System.Drawing.Size(100, 26);
+            this.viscosityInput.TabIndex = 15;
+            this.viscosityInput.Text = "1.0";
+            //
+            // lblSpecificGravity
+            //
+            this.lblSpecificGravity.AutoSize = true;
+            this.lblSpecificGravity.Location = new System.Drawing.Point(20, 350);
+            this.lblSpecificGravity.Name = "lblSpecificGravity";
+            this.lblSpecificGravity.Size = new System.Drawing.Size(160, 20);
+            this.lblSpecificGravity.TabIndex = 16;
+            this.lblSpecificGravity.Text = "Specific Gravity (SG):";
+            //
+            // specificGravityInput
+            //
+            this.specificGravityInput.Location = new System.Drawing.Point(250, 345);
+            this.specificGravityInput.Name = "specificGravityInput";
+            this.specificGravityInput.Size = new System.Drawing.Size(100, 26);
+            this.specificGravityInput.TabIndex = 17;
+            this.specificGravityInput.Text = "1.0";
+            //
+            // lblOperatingPressure
+            //
+            this.lblOperatingPressure.AutoSize = true;
+            this.lblOperatingPressure.Location = new System.Drawing.Point(20, 390);
+            this.lblOperatingPressure.Name = "lblOperatingPressure";
+            this.lblOperatingPressure.Size = new System.Drawing.Size(193, 20);
+            this.lblOperatingPressure.TabIndex = 18;
+            this.lblOperatingPressure.Text = "Operating Pressure (psig):";
+            //
+            // operatingPressureInput
+            //
+            this.operatingPressureInput.Location = new System.Drawing.Point(250, 385);
+            this.operatingPressureInput.Name = "operatingPressureInput";
+            this.operatingPressureInput.Size = new System.Drawing.Size(100, 26);
+            this.operatingPressureInput.TabIndex = 19;
+            this.operatingPressureInput.Text = "80";
             //
             // vesselDesignGroupBox
             //
@@ -348,19 +602,22 @@ namespace FERExcelAddIn
             this.vesselDesignGroupBox.Controls.Add(this.chkInsulated);
             this.vesselDesignGroupBox.Controls.Add(this.chkWaterSpray);
             this.vesselDesignGroupBox.Controls.Add(this.chkUnderground);
-            this.vesselDesignGroupBox.Location = new System.Drawing.Point(3, 369);
+            this.vesselDesignGroupBox.Controls.Add(this.lblVesselOrientation);
+            this.vesselDesignGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.vesselDesignGroupBox.Location = new System.Drawing.Point(665, 3);
             this.vesselDesignGroupBox.Name = "vesselDesignGroupBox";
-            this.vesselDesignGroupBox.Size = new System.Drawing.Size(620, 300);
-            this.vesselDesignGroupBox.TabIndex = 3;
+            this.vesselDesignGroupBox.Size = new System.Drawing.Size(656, 409);
+            this.vesselDesignGroupBox.TabIndex = 2;
             this.vesselDesignGroupBox.TabStop = false;
             this.vesselDesignGroupBox.Text = "Vessel Design Parameters";
             //
             // lblMAWP
             //
             this.lblMAWP.AutoSize = true;
+            this.lblMAWP.Font = new System.Drawing.Font("Microsoft Sans Serif", 8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMAWP.Location = new System.Drawing.Point(20, 30);
             this.lblMAWP.Name = "lblMAWP";
-            this.lblMAWP.Size = new System.Drawing.Size(105, 20);
+            this.lblMAWP.Size = new System.Drawing.Size(117, 20);
             this.lblMAWP.TabIndex = 0;
             this.lblMAWP.Text = "MAWP (psig):";
             //
@@ -502,259 +759,6 @@ namespace FERExcelAddIn
             this.chkUnderground.Text = "Underground";
             this.chkUnderground.UseVisualStyleBackColor = true;
             //
-            // inputGroupBox
-            //
-            this.inputGroupBox.Controls.Add(this.lblPressure);
-            this.inputGroupBox.Controls.Add(this.pressureInput);
-            this.inputGroupBox.Controls.Add(this.lblTemperature);
-            this.inputGroupBox.Controls.Add(this.temperatureInput);
-            this.inputGroupBox.Controls.Add(this.lblFlowRate);
-            this.inputGroupBox.Controls.Add(this.flowRateInput);
-            this.inputGroupBox.Controls.Add(this.lblMolecularWeight);
-            this.inputGroupBox.Controls.Add(this.molecularWeightInput);
-            this.inputGroupBox.Controls.Add(this.lblSpecificHeatRatio);
-            this.inputGroupBox.Controls.Add(this.specificHeatRatioInput);
-            this.inputGroupBox.Controls.Add(this.lblCompressibility);
-            this.inputGroupBox.Controls.Add(this.compressibilityInput);
-            this.inputGroupBox.Controls.Add(this.lblViscosity);
-            this.inputGroupBox.Controls.Add(this.viscosityInput);
-            this.inputGroupBox.Controls.Add(this.lblSpecificGravity);
-            this.inputGroupBox.Controls.Add(this.specificGravityInput);
-            this.inputGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.inputGroupBox.Location = new System.Drawing.Point(703, 3);
-            this.inputGroupBox.Name = "inputGroupBox";
-            this.inputGroupBox.Size = new System.Drawing.Size(462, 715);
-            this.inputGroupBox.TabIndex = 1;
-            this.inputGroupBox.TabStop = false;
-            this.inputGroupBox.Text = "Input Parameters";
-            //
-            // lblPressure
-            //
-            this.lblPressure.AutoSize = true;
-            this.lblPressure.Location = new System.Drawing.Point(20, 30);
-            this.lblPressure.Name = "lblPressure";
-            this.lblPressure.Size = new System.Drawing.Size(114, 20);
-            this.lblPressure.TabIndex = 0;
-            this.lblPressure.Text = "Pressure psig):";
-            //
-            // pressureInput
-            //
-            this.pressureInput.Location = new System.Drawing.Point(274, 32);
-            this.pressureInput.Name = "pressureInput";
-            this.pressureInput.Size = new System.Drawing.Size(100, 26);
-            this.pressureInput.TabIndex = 1;
-            this.pressureInput.Text = "100";
-            //
-            // lblTemperature
-            //
-            this.lblTemperature.AutoSize = true;
-            this.lblTemperature.Location = new System.Drawing.Point(20, 70);
-            this.lblTemperature.Name = "lblTemperature";
-            this.lblTemperature.Size = new System.Drawing.Size(133, 20);
-            this.lblTemperature.TabIndex = 2;
-            this.lblTemperature.Text = "Temperature (°F):";
-            //
-            // temperatureInput
-            //
-            this.temperatureInput.Location = new System.Drawing.Point(274, 72);
-            this.temperatureInput.Name = "temperatureInput";
-            this.temperatureInput.Size = new System.Drawing.Size(100, 26);
-            this.temperatureInput.TabIndex = 3;
-            this.temperatureInput.Text = "60";
-            //
-            // lblFlowRate
-            //
-            this.lblFlowRate.AutoSize = true;
-            this.lblFlowRate.Location = new System.Drawing.Point(20, 110);
-            this.lblFlowRate.Name = "lblFlowRate";
-            this.lblFlowRate.Size = new System.Drawing.Size(85, 20);
-            this.lblFlowRate.TabIndex = 4;
-            this.lblFlowRate.Text = "Flow Rate:";
-            //
-            // flowRateInput
-            //
-            this.flowRateInput.Location = new System.Drawing.Point(274, 112);
-            this.flowRateInput.Name = "flowRateInput";
-            this.flowRateInput.Size = new System.Drawing.Size(100, 26);
-            this.flowRateInput.TabIndex = 5;
-            this.flowRateInput.Text = "500";
-            //
-            // lblMolecularWeight
-            //
-            this.lblMolecularWeight.AutoSize = true;
-            this.lblMolecularWeight.Location = new System.Drawing.Point(20, 150);
-            this.lblMolecularWeight.Name = "lblMolecularWeight";
-            this.lblMolecularWeight.Size = new System.Drawing.Size(187, 20);
-            this.lblMolecularWeight.TabIndex = 6;
-            this.lblMolecularWeight.Text = "Molecular Weight (g/mol):";
-            //
-            // molecularWeightInput
-            //
-            this.molecularWeightInput.Location = new System.Drawing.Point(274, 152);
-            this.molecularWeightInput.Name = "molecularWeightInput";
-            this.molecularWeightInput.Size = new System.Drawing.Size(100, 26);
-            this.molecularWeightInput.TabIndex = 7;
-            this.molecularWeightInput.Text = "28.97";
-            //
-            // lblSpecificHeatRatio
-            //
-            this.lblSpecificHeatRatio.AutoSize = true;
-            this.lblSpecificHeatRatio.Location = new System.Drawing.Point(20, 190);
-            this.lblSpecificHeatRatio.Name = "lblSpecificHeatRatio";
-            this.lblSpecificHeatRatio.Size = new System.Drawing.Size(223, 20);
-            this.lblSpecificHeatRatio.TabIndex = 8;
-            this.lblSpecificHeatRatio.Text = "Specific Heat Ratio (k=Cp/Cv):";
-            //
-            // specificHeatRatioInput
-            //
-            this.specificHeatRatioInput.Location = new System.Drawing.Point(274, 192);
-            this.specificHeatRatioInput.Name = "specificHeatRatioInput";
-            this.specificHeatRatioInput.Size = new System.Drawing.Size(100, 26);
-            this.specificHeatRatioInput.TabIndex = 9;
-            this.specificHeatRatioInput.Text = "1.4";
-            //
-            // lblCompressibility
-            //
-            this.lblCompressibility.AutoSize = true;
-            this.lblCompressibility.Location = new System.Drawing.Point(20, 230);
-            this.lblCompressibility.Name = "lblCompressibility";
-            this.lblCompressibility.Size = new System.Drawing.Size(192, 20);
-            this.lblCompressibility.TabIndex = 10;
-            this.lblCompressibility.Text = "Compressibility Factor (Z):";
-            //
-            // compressibilityInput
-            //
-            this.compressibilityInput.Location = new System.Drawing.Point(274, 232);
-            this.compressibilityInput.Name = "compressibilityInput";
-            this.compressibilityInput.Size = new System.Drawing.Size(100, 26);
-            this.compressibilityInput.TabIndex = 11;
-            this.compressibilityInput.Text = "1.0";
-            //
-            // lblViscosity
-            //
-            this.lblViscosity.AutoSize = true;
-            this.lblViscosity.Location = new System.Drawing.Point(20, 270);
-            this.lblViscosity.Name = "lblViscosity";
-            this.lblViscosity.Size = new System.Drawing.Size(107, 20);
-            this.lblViscosity.TabIndex = 12;
-            this.lblViscosity.Text = "Viscosity (cP):";
-            //
-            // viscosityInput
-            //
-            this.viscosityInput.Location = new System.Drawing.Point(274, 272);
-            this.viscosityInput.Name = "viscosityInput";
-            this.viscosityInput.Size = new System.Drawing.Size(100, 26);
-            this.viscosityInput.TabIndex = 13;
-            this.viscosityInput.Text = "1.0";
-            //
-            // lblSpecificGravity
-            //
-            this.lblSpecificGravity.AutoSize = true;
-            this.lblSpecificGravity.Location = new System.Drawing.Point(20, 310);
-            this.lblSpecificGravity.Name = "lblSpecificGravity";
-            this.lblSpecificGravity.Size = new System.Drawing.Size(160, 20);
-            this.lblSpecificGravity.TabIndex = 14;
-            this.lblSpecificGravity.Text = "Specific Gravity (SG):";
-            //
-            // specificGravityInput
-            //
-            this.specificGravityInput.Location = new System.Drawing.Point(274, 312);
-            this.specificGravityInput.Name = "specificGravityInput";
-            this.specificGravityInput.Size = new System.Drawing.Size(100, 26);
-            this.specificGravityInput.TabIndex = 15;
-            this.specificGravityInput.Text = "1.0";
-            //
-            // resultsDataGridView
-            //
-            this.resultsDataGridView.AllowUserToAddRows = false;
-            this.resultsDataGridView.AllowUserToDeleteRows = false;
-            this.resultsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.resultsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.colScenario,
-            this.colFlowRate,
-            this.colArea,
-            this.colOrificeSize});
-            this.resultsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.resultsDataGridView.Location = new System.Drawing.Point(3, 724);
-            this.resultsDataGridView.Name = "resultsDataGridView";
-            this.resultsDataGridView.ReadOnly = true;
-            this.resultsDataGridView.RowHeadersVisible = false;
-            this.resultsDataGridView.RowHeadersWidth = 62;
-            this.resultsDataGridView.RowTemplate.Height = 28;
-            this.resultsDataGridView.Size = new System.Drawing.Size(694, 304);
-            this.resultsDataGridView.TabIndex = 2;
-            //
-            // colScenario
-            //
-            this.colScenario.HeaderText = "Scenario";
-            this.colScenario.MinimumWidth = 8;
-            this.colScenario.Name = "colScenario";
-            this.colScenario.ReadOnly = true;
-            this.colScenario.Width = 150;
-            //
-            // colFlowRate
-            //
-            this.colFlowRate.HeaderText = "Flow Rate";
-            this.colFlowRate.MinimumWidth = 8;
-            this.colFlowRate.Name = "colFlowRate";
-            this.colFlowRate.ReadOnly = true;
-            this.colFlowRate.Width = 150;
-            //
-            // colArea
-            //
-            this.colArea.HeaderText = "Area (in²)";
-            this.colArea.MinimumWidth = 8;
-            this.colArea.Name = "colArea";
-            this.colArea.ReadOnly = true;
-            this.colArea.Width = 150;
-            //
-            // colOrificeSize
-            //
-            this.colOrificeSize.HeaderText = "Orifice Size";
-            this.colOrificeSize.MinimumWidth = 8;
-            this.colOrificeSize.Name = "colOrificeSize";
-            this.colOrificeSize.ReadOnly = true;
-            this.colOrificeSize.Width = 150;
-            //
-            // buttonsPanel
-            //
-            this.buttonsPanel.Controls.Add(this.btnExcelExport);
-            this.buttonsPanel.Controls.Add(this.btnCalculate);
-            this.buttonsPanel.Controls.Add(this.autoCalculateCheckBox);
-            this.buttonsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.buttonsPanel.Location = new System.Drawing.Point(703, 724);
-            this.buttonsPanel.Name = "buttonsPanel";
-            this.buttonsPanel.Size = new System.Drawing.Size(462, 304);
-            this.buttonsPanel.TabIndex = 3;
-            //
-            // btnExcelExport
-            //
-            this.btnExcelExport.Location = new System.Drawing.Point(20, 60);
-            this.btnExcelExport.Name = "btnExcelExport";
-            this.btnExcelExport.Size = new System.Drawing.Size(150, 40);
-            this.btnExcelExport.TabIndex = 1;
-            this.btnExcelExport.Text = "Export to Excel";
-            this.btnExcelExport.UseVisualStyleBackColor = true;
-            //
-            // btnCalculate
-            //
-            this.btnCalculate.Location = new System.Drawing.Point(20, 10);
-            this.btnCalculate.Name = "btnCalculate";
-            this.btnCalculate.Size = new System.Drawing.Size(150, 40);
-            this.btnCalculate.TabIndex = 0;
-            this.btnCalculate.Text = "Calculate";
-            this.btnCalculate.UseVisualStyleBackColor = true;
-            //
-            // autoCalculateCheckBox
-            //
-            this.autoCalculateCheckBox.AutoSize = true;
-            this.autoCalculateCheckBox.Location = new System.Drawing.Point(24, 122);
-            this.autoCalculateCheckBox.Name = "autoCalculateCheckBox";
-            this.autoCalculateCheckBox.Size = new System.Drawing.Size(140, 24);
-            this.autoCalculateCheckBox.TabIndex = 2;
-            this.autoCalculateCheckBox.Text = "Auto-Calculate";
-            this.autoCalculateCheckBox.UseVisualStyleBackColor = true;
-            //
             // lblVesselOrientation
             //
             this.lblVesselOrientation.AutoSize = true;
@@ -765,26 +769,135 @@ namespace FERExcelAddIn
             this.lblVesselOrientation.TabIndex = 16;
             this.lblVesselOrientation.Text = "Orientation:";
             //
+            // tabScenarios
+            //
+            this.tabScenarios.Controls.Add(this.scenarioGroupBox);
+            this.tabScenarios.Location = new System.Drawing.Point(4, 29);
+            this.tabScenarios.Name = "tabScenarios";
+            this.tabScenarios.Padding = new System.Windows.Forms.Padding(3);
+            this.tabScenarios.Size = new System.Drawing.Size(1330, 837);
+            this.tabScenarios.TabIndex = 1;
+            this.tabScenarios.Text = "Scenarios";
+            this.tabScenarios.UseVisualStyleBackColor = true;
+            //
+            // scenarioGroupBox
+            //
+            this.scenarioGroupBox.Controls.Add(this.chkBlockedOutlet);
+            this.scenarioGroupBox.Controls.Add(this.chkExternalFire);
+            this.scenarioGroupBox.Controls.Add(this.chkCoolingFailure);
+            this.scenarioGroupBox.Controls.Add(this.chkTubeRupture);
+            this.scenarioGroupBox.Controls.Add(this.chkChemicalReaction);
+            this.scenarioGroupBox.Controls.Add(this.chkThermalExpansion);
+            this.scenarioGroupBox.Controls.Add(this.chkControlValveFailure);
+            this.scenarioGroupBox.Controls.Add(this.chkPowerFailure);
+            this.scenarioGroupBox.Controls.Add(this.chkHydraulicHammer);
+            this.scenarioGroupBox.Controls.Add(this.chkRefluxFailure);
+            this.scenarioGroupBox.Controls.Add(this.chkCompressorFailure);
+            this.scenarioGroupBox.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.scenarioGroupBox.Location = new System.Drawing.Point(3, 3);
+            this.scenarioGroupBox.Name = "scenarioGroupBox";
+            this.scenarioGroupBox.Size = new System.Drawing.Size(1324, 831);
+            this.scenarioGroupBox.TabIndex = 0;
+            this.scenarioGroupBox.TabStop = false;
+            this.scenarioGroupBox.Text = "Sizing Scenarios";
+            //
+            // tabResults
+            //
+            this.tabResults.Controls.Add(this.resultsDataGridView);
+            this.tabResults.Location = new System.Drawing.Point(4, 29);
+            this.tabResults.Name = "tabResults";
+            this.tabResults.Padding = new System.Windows.Forms.Padding(3);
+            this.tabResults.Size = new System.Drawing.Size(1330, 837);
+            this.tabResults.TabIndex = 2;
+            this.tabResults.Text = "Results";
+            this.tabResults.UseVisualStyleBackColor = true;
+            //
+            // resultsDataGridView
+            //
+            this.resultsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.resultsDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.colScenario,
+            this.colFlowRate,
+            this.colArea,
+            this.colOrificeSize,
+            this.colSetPressure});
+            this.resultsDataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.resultsDataGridView.Location = new System.Drawing.Point(3, 3);
+            this.resultsDataGridView.Name = "resultsDataGridView";
+            this.resultsDataGridView.RowHeadersWidth = 62;
+            this.resultsDataGridView.RowTemplate.Height = 28;
+            this.resultsDataGridView.Size = new System.Drawing.Size(1324, 831);
+            this.resultsDataGridView.TabIndex = 0;
+            //
+            // colScenario
+            //
+            this.colScenario.HeaderText = "Scenario";
+            this.colScenario.MinimumWidth = 8;
+            this.colScenario.Name = "colScenario";
+            this.colScenario.Width = 200;
+            //
+            // colFlowRate
+            //
+            this.colFlowRate.HeaderText = "Flow Rate (lb/hr)";
+            this.colFlowRate.MinimumWidth = 8;
+            this.colFlowRate.Name = "colFlowRate";
+            this.colFlowRate.Width = 150;
+            //
+            // colArea
+            //
+            this.colArea.HeaderText = "Req. Area (in²)";
+            this.colArea.MinimumWidth = 8;
+            this.colArea.Name = "colArea";
+            this.colArea.Width = 150;
+            //
+            // colOrificeSize
+            //
+            this.colOrificeSize.HeaderText = "Orifice Size";
+            this.colOrificeSize.MinimumWidth = 8;
+            this.colOrificeSize.Name = "colOrificeSize";
+            this.colOrificeSize.Width = 150;
+            //
+            // colSetPressure
+            //
+            this.colSetPressure.HeaderText = "Set Pressure (psig)";
+            this.colSetPressure.MinimumWidth = 8;
+            this.colSetPressure.Name = "colSetPressure";
+            this.colSetPressure.Width = 150;
+            //
+            // buttonsPanel
+            //
+            this.buttonsPanel.Controls.Add(this.btnExcelExport);
+            this.buttonsPanel.Controls.Add(this.btnCalculate);
+            this.buttonsPanel.Controls.Add(this.autoCalculateCheckBox);
+            this.buttonsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.buttonsPanel.Location = new System.Drawing.Point(3, 879);
+            this.buttonsPanel.Name = "buttonsPanel";
+            this.buttonsPanel.Size = new System.Drawing.Size(1338, 149);
+            this.buttonsPanel.TabIndex = 1;
+            //
             // PSVSizingForm
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1168, 1031);
+            this.ClientSize = new System.Drawing.Size(1344, 1031);
             this.Controls.Add(this.mainTableLayout);
-            this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "PSVSizingForm";
-            this.Text = "PSV Sizing Calculator";
+            this.Text = "Pressure Safety Valve Sizing Tool";
             this.mainTableLayout.ResumeLayout(false);
-            this.leftFlowPanel.ResumeLayout(false);
-            this.leftFlowPanel.PerformLayout();
+            this.tabControl.ResumeLayout(false);
+            this.tabInputs.ResumeLayout(false);
+            this.inputsTableLayout.ResumeLayout(false);
             this.psvConfigGroupBox.ResumeLayout(false);
             this.psvConfigGroupBox.PerformLayout();
-            this.scenarioGroupBox.ResumeLayout(false);
-            this.scenarioGroupBox.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.staggeredPsvsDataGridView)).EndInit();
+            this.fluidPropertiesGroupBox.ResumeLayout(false);
+            this.fluidPropertiesGroupBox.PerformLayout();
             this.vesselDesignGroupBox.ResumeLayout(false);
             this.vesselDesignGroupBox.PerformLayout();
-            this.inputGroupBox.ResumeLayout(false);
-            this.inputGroupBox.PerformLayout();
+            this.tabScenarios.ResumeLayout(false);
+            this.scenarioGroupBox.ResumeLayout(false);
+            this.scenarioGroupBox.PerformLayout();
+            this.tabResults.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.resultsDataGridView)).EndInit();
             this.buttonsPanel.ResumeLayout(false);
             this.buttonsPanel.PerformLayout();
@@ -795,69 +908,77 @@ namespace FERExcelAddIn
         #endregion
 
         private System.Windows.Forms.TableLayoutPanel mainTableLayout;
-        private System.Windows.Forms.FlowLayoutPanel leftFlowPanel;
+        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabPage tabInputs;
+        private System.Windows.Forms.TableLayoutPanel inputsTableLayout;
         private System.Windows.Forms.GroupBox psvConfigGroupBox;
-        internal System.Windows.Forms.RadioButton radSinglePSV;
-        internal System.Windows.Forms.RadioButton radMultiplePSV;
-        internal System.Windows.Forms.CheckBox chkFireCase;
-        internal System.Windows.Forms.ComboBox fluidTypeCombo;
-        internal System.Windows.Forms.GroupBox scenarioGroupBox;
-        internal System.Windows.Forms.CheckBox chkBlockedOutlet;
-        internal System.Windows.Forms.CheckBox chkExternalFire;
-        internal System.Windows.Forms.CheckBox chkCoolingFailure;
-        internal System.Windows.Forms.CheckBox chkTubeRupture;
-        internal System.Windows.Forms.CheckBox chkChemicalReaction;
-        internal System.Windows.Forms.CheckBox chkThermalExpansion;
-        internal System.Windows.Forms.CheckBox chkControlValveFailure;
-        internal System.Windows.Forms.CheckBox chkPowerFailure;
-        internal System.Windows.Forms.CheckBox chkHydraulicHammer;
-        internal System.Windows.Forms.CheckBox chkRefluxFailure;
-        internal System.Windows.Forms.CheckBox chkCompressorFailure;
+        private System.Windows.Forms.RadioButton radSinglePSV;
+        private System.Windows.Forms.RadioButton radMultiplePSV;
+        private System.Windows.Forms.CheckBox chkFireCase;
+        private System.Windows.Forms.DataGridView staggeredPsvsDataGridView;
+        private System.Windows.Forms.GroupBox fluidPropertiesGroupBox;
+        private System.Windows.Forms.Label lblFluidType;
+        private System.Windows.Forms.ComboBox fluidTypeCombo;
+        private System.Windows.Forms.Label lblPressure;
+        private System.Windows.Forms.TextBox pressureInput;
+        private System.Windows.Forms.Label lblTemperature;
+        private System.Windows.Forms.TextBox temperatureInput;
+        private System.Windows.Forms.Label lblFlowRate;
+        private System.Windows.Forms.TextBox flowRateInput;
+        private System.Windows.Forms.Label lblMolecularWeight;
+        private System.Windows.Forms.TextBox molecularWeightInput;
+        private System.Windows.Forms.Label lblSpecificHeatRatio;
+        private System.Windows.Forms.TextBox specificHeatRatioInput;
+        private System.Windows.Forms.Label lblCompressibility;
+        private System.Windows.Forms.TextBox compressibilityInput;
+        private System.Windows.Forms.Label lblViscosity;
+        private System.Windows.Forms.TextBox viscosityInput;
+        private System.Windows.Forms.Label lblSpecificGravity;
+        private System.Windows.Forms.TextBox specificGravityInput;
+        private System.Windows.Forms.Label lblOperatingPressure;
+        private System.Windows.Forms.TextBox operatingPressureInput;
         private System.Windows.Forms.GroupBox vesselDesignGroupBox;
         private System.Windows.Forms.Label lblMAWP;
-        internal System.Windows.Forms.TextBox txtMAWP;
+        private System.Windows.Forms.TextBox txtMAWP;
         private System.Windows.Forms.Label lblDesignTemp;
-        internal System.Windows.Forms.TextBox txtDesignTemp;
+        private System.Windows.Forms.TextBox txtDesignTemp;
         private System.Windows.Forms.Label lblAccumulation;
-        internal System.Windows.Forms.ComboBox cmbAccumulation;
+        private System.Windows.Forms.ComboBox cmbAccumulation;
         private System.Windows.Forms.Label lblFillLevel;
-        internal System.Windows.Forms.TextBox txtFillLevel;
-        internal System.Windows.Forms.Label lblVesselDiameter;
-        internal System.Windows.Forms.TextBox vesselDiameterInput;
-        internal System.Windows.Forms.Label lblVesselLength;
-        internal System.Windows.Forms.TextBox vesselLengthInput;
-        internal System.Windows.Forms.CheckBox chkHorizontalVessel;
-        internal System.Windows.Forms.CheckBox chkInsulated;
-        internal System.Windows.Forms.CheckBox chkWaterSpray;
-        internal System.Windows.Forms.CheckBox chkUnderground;
-        internal System.Windows.Forms.Label lblVesselOrientation;
-        private System.Windows.Forms.GroupBox inputGroupBox;
-        private System.Windows.Forms.Label lblPressure;
-        internal System.Windows.Forms.TextBox pressureInput;
-        private System.Windows.Forms.Label lblTemperature;
-        internal System.Windows.Forms.TextBox temperatureInput;
-        internal System.Windows.Forms.Label lblFlowRate;
-        internal System.Windows.Forms.TextBox flowRateInput;
-        internal System.Windows.Forms.Label lblMolecularWeight;
-        internal System.Windows.Forms.TextBox molecularWeightInput;
-        internal System.Windows.Forms.Label lblSpecificHeatRatio;
-        internal System.Windows.Forms.TextBox specificHeatRatioInput;
-        internal System.Windows.Forms.Label lblCompressibility;
-        internal System.Windows.Forms.TextBox compressibilityInput;
-        internal System.Windows.Forms.Label lblViscosity;
-        internal System.Windows.Forms.TextBox viscosityInput;
-        internal System.Windows.Forms.Label lblSpecificGravity;
-        internal System.Windows.Forms.TextBox specificGravityInput;
-        internal System.Windows.Forms.DataGridView resultsDataGridView;
+        private System.Windows.Forms.TextBox txtFillLevel;
+        private System.Windows.Forms.Label lblVesselDiameter;
+        private System.Windows.Forms.TextBox vesselDiameterInput;
+        private System.Windows.Forms.Label lblVesselLength;
+        private System.Windows.Forms.TextBox vesselLengthInput;
+        private System.Windows.Forms.CheckBox chkHorizontalVessel;
+        private System.Windows.Forms.CheckBox chkInsulated;
+        private System.Windows.Forms.CheckBox chkWaterSpray;
+        private System.Windows.Forms.CheckBox chkUnderground;
+        private System.Windows.Forms.Label lblVesselOrientation;
+        private System.Windows.Forms.TabPage tabScenarios;
+        private System.Windows.Forms.GroupBox scenarioGroupBox;
+        private System.Windows.Forms.CheckBox chkBlockedOutlet;
+        private System.Windows.Forms.CheckBox chkExternalFire;
+        private System.Windows.Forms.CheckBox chkCoolingFailure;
+        private System.Windows.Forms.CheckBox chkTubeRupture;
+        private System.Windows.Forms.CheckBox chkChemicalReaction;
+        private System.Windows.Forms.CheckBox chkThermalExpansion;
+        private System.Windows.Forms.CheckBox chkControlValveFailure;
+        private System.Windows.Forms.CheckBox chkPowerFailure;
+        private System.Windows.Forms.CheckBox chkHydraulicHammer;
+        private System.Windows.Forms.CheckBox chkRefluxFailure;
+        private System.Windows.Forms.CheckBox chkCompressorFailure;
+        private System.Windows.Forms.TabPage tabResults;
+        private System.Windows.Forms.DataGridView resultsDataGridView;
         private System.Windows.Forms.DataGridViewTextBoxColumn colScenario;
         private System.Windows.Forms.DataGridViewTextBoxColumn colFlowRate;
         private System.Windows.Forms.DataGridViewTextBoxColumn colArea;
         private System.Windows.Forms.DataGridViewTextBoxColumn colOrificeSize;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colSetPressure;
         private System.Windows.Forms.Panel buttonsPanel;
-        internal System.Windows.Forms.Button btnExcelExport;
-        internal System.Windows.Forms.Button btnCalculate;
-        internal System.Windows.Forms.CheckBox autoCalculateCheckBox;
+        private System.Windows.Forms.Button btnExcelExport;
+        private System.Windows.Forms.Button btnCalculate;
+        private System.Windows.Forms.CheckBox autoCalculateCheckBox;
         private System.Windows.Forms.ToolTip toolTip1;
-        internal System.Windows.Forms.Label lblFluidType;
     }
 }
