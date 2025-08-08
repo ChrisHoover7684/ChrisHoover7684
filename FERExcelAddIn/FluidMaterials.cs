@@ -85,7 +85,10 @@ namespace FERExcelAddIn
                 Viscosity = 1.00,
                 VaporPressure = 0.46,
                 BoilingPoint = 100,
-                DefaultTemperature = 25
+                DefaultTemperature = 25,
+                Density = 1000,
+                SpecificHeat = 4.186,
+                ThermalExpansionCoefficient = 0.000214
             }
         },
         {
@@ -97,7 +100,10 @@ namespace FERExcelAddIn
                 Viscosity = 0.6,
                 VaporPressure = 10.0,
                 BoilingPoint = 150,
-                DefaultTemperature = 25
+                DefaultTemperature = 25,
+                Density = 740,
+                SpecificHeat = 2.1,
+                ThermalExpansionCoefficient = 0.00095
             }
         },
         {
@@ -109,7 +115,10 @@ namespace FERExcelAddIn
                 Viscosity = 3.0,
                 VaporPressure = 0.01,
                 BoilingPoint = 250,
-                DefaultTemperature = 25
+                DefaultTemperature = 25,
+                Density = 850,
+                SpecificHeat = 1.8,
+                ThermalExpansionCoefficient = 0.00075
             }
         },
         {
@@ -121,7 +130,10 @@ namespace FERExcelAddIn
                 Viscosity = 15.0,
                 VaporPressure = 2.0,
                 BoilingPoint = 300,
-                DefaultTemperature = 25
+                DefaultTemperature = 25,
+                Density = 870,
+                SpecificHeat = 2.0,
+                ThermalExpansionCoefficient = 0.0007
             }
         },
 
@@ -301,10 +313,28 @@ namespace FERExcelAddIn
             // Common
             public double Viscosity { get; set; }       // cP
             public int DefaultTemperature { get; set; } // °C
+            public double Density { get; set; } // kg/m³
+            public double SpecificHeat { get; set; } // kJ/kg·K
+            public double ThermalExpansionCoefficient { get; set; } // 1/°C
 
             public bool IsSpecialCase { get; set; } = false;
         }
 
         public enum Phase { Gas, Liquid, TwoPhase, Steam }
+    }
+
+    public class ControlValveInput
+    {
+        public double Cv { get; set; }
+        public double UpstreamPressure { get; set; }
+        public double DownstreamPressure { get; set; }
+        public MaterialDatabase.Phase FluidPhase { get; set; }
+        public double DischargeCoefficient { get; set; }
+        public double SpecificGravity { get; set; }
+        public double VaporPressure { get; set; }
+        public double SpecificHeatRatio { get; set; }
+        public double Compressibility { get; set; }
+        public double MolecularWeight { get; set; }
+        public double Temperature { get; set; }
     }
 }
