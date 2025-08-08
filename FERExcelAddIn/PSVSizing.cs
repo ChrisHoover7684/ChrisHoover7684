@@ -108,6 +108,17 @@ namespace FERExcelAddIn
             chkTubeRupture.CheckedChanged += ScenarioCheckbox_CheckedChanged;
             chkLiquidTubeRupture.CheckedChanged += ScenarioCheckbox_CheckedChanged;
             chkSteamTubeRupture.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+            chkThermalRelief.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+            chkLiquidThermalRelief.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+            chkSteamThermalRelief.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+            chkRunawayReaction.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+            chkLiquidRunawayReaction.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+            chkSteamRunawayReaction.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+
+            // Add missing handlers for Blocked Outlet
+            chkBlockedOutlet.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+            chkLiquidBlockedOutlet.CheckedChanged += ScenarioCheckbox_CheckedChanged;
+            chkSteamBlockedOutlet.CheckedChanged += ScenarioCheckbox_CheckedChanged;
         }
 
         private void FireCaseGasRadio_CheckedChanged(object sender, EventArgs e)
@@ -254,8 +265,16 @@ namespace FERExcelAddIn
             CheckBox chk = sender as CheckBox;
             if (chk == null) return;
 
-            string scenarioName = chk.Text.Replace(" ", "");
-            GroupBox groupBox = this.Controls.Find($"group{scenarioName}", true).FirstOrDefault() as GroupBox;
+            // Derive the GroupBox name by stripping phase prefixes (Gas, Liquid, Steam)
+            // from the CheckBox name. This allows multiple, phase-specific checkboxes
+            // to control a single, shared GroupBox.
+            // e.g., "chkLiquidPowerFailure" becomes "groupPowerFailure".
+            string chkName = chk.Name;
+            string baseName = chkName.Replace("Liquid", "").Replace("Gas", "").Replace("Steam", "");
+            string groupBoxName = baseName.Replace("chk", "group");
+
+            Control[] foundControls = this.Controls.Find(groupBoxName, true);
+            GroupBox groupBox = foundControls.FirstOrDefault() as GroupBox;
 
             if (groupBox != null)
             {

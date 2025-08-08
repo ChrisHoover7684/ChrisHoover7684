@@ -358,7 +358,7 @@ namespace FERExcelAddIn
             this.groupTubeRupture.Controls.Add(this.txtTubeInnerDiameter);
             this.groupTubeRupture.Controls.Add(this.lblDischargeCoefficient);
             this.groupTubeRupture.Controls.Add(this.txtDischargeCoefficient);
-            this.groupTubeRupture.Location = new System.Drawing.Point(10, 930);
+            this.groupTubeRupture.Location = new System.Drawing.Point(10, 1030);
             this.groupTubeRupture.Name = "groupTubeRupture";
             this.groupTubeRupture.Size = new System.Drawing.Size(350, 220);
             this.groupTubeRupture.TabIndex = 31;
@@ -441,7 +441,7 @@ namespace FERExcelAddIn
             this.groupThermalRelief.Controls.Add(this.txtInitialPressure);
             this.groupThermalRelief.Controls.Add(this.lblReliefPressure);
             this.groupThermalRelief.Controls.Add(this.txtReliefPressure);
-            this.groupThermalRelief.Location = new System.Drawing.Point(10, 720);
+            this.groupThermalRelief.Location = new System.Drawing.Point(10, 820);
             this.groupThermalRelief.Name = "groupThermalRelief";
             this.groupThermalRelief.Size = new System.Drawing.Size(350, 200);
             this.groupThermalRelief.TabIndex = 30;
@@ -1316,7 +1316,7 @@ namespace FERExcelAddIn
             this.groupControlValveFailure.Controls.Add(this.txtUpstreamPressure);
             this.groupControlValveFailure.Controls.Add(this.lblDownstreamPressure);
             this.groupControlValveFailure.Controls.Add(this.txtDownstreamPressure);
-            this.groupControlValveFailure.Location = new System.Drawing.Point(10, 340);
+            this.groupControlValveFailure.Location = new System.Drawing.Point(10, 360);
             this.groupControlValveFailure.Name = "groupControlValveFailure";
             this.groupControlValveFailure.Size = new System.Drawing.Size(350, 180);
             this.groupControlValveFailure.TabIndex = 24;
@@ -1377,7 +1377,7 @@ namespace FERExcelAddIn
             //
             this.groupPowerFailure.Controls.Add(this.txtPumpHead);
             this.groupPowerFailure.Controls.Add(this.label68);
-            this.groupPowerFailure.Location = new System.Drawing.Point(10, 450);
+            this.groupPowerFailure.Location = new System.Drawing.Point(10, 550);
             this.groupPowerFailure.Name = "groupPowerFailure";
             this.groupPowerFailure.Size = new System.Drawing.Size(350, 100);
             this.groupPowerFailure.TabIndex = 25;
@@ -1406,7 +1406,7 @@ namespace FERExcelAddIn
             //
             this.groupHydraulicHammer.Controls.Add(this.txtValveCloseTime);
             this.groupHydraulicHammer.Controls.Add(this.label69);
-            this.groupHydraulicHammer.Location = new System.Drawing.Point(10, 230);
+            this.groupHydraulicHammer.Location = new System.Drawing.Point(10, 250);
             this.groupHydraulicHammer.Name = "groupHydraulicHammer";
             this.groupHydraulicHammer.Size = new System.Drawing.Size(350, 100);
             this.groupHydraulicHammer.TabIndex = 26;
@@ -3067,11 +3067,33 @@ namespace FERExcelAddIn
             this.scenarioDetailsPanel.Controls.Add(this.groupCompressorExpanderFailure);
             this.scenarioDetailsPanel.Controls.Add(this.groupBlockedOutlet);
             this.scenarioDetailsPanel.Controls.Add(this.groupThermalRelief);
+            this.scenarioDetailsPanel.Controls.Add(this.groupRunawayReaction);
             this.scenarioDetailsPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.scenarioDetailsPanel.Location = new System.Drawing.Point(1189, 3);
             this.scenarioDetailsPanel.Name = "scenarioDetailsPanel";
             this.scenarioDetailsPanel.Size = new System.Drawing.Size(390, 1194);
             this.scenarioDetailsPanel.TabIndex = 1;
+            //
+            // groupRunawayReaction
+            //
+            this.groupRunawayReaction.Controls.Add(this.lblRunawayReactionInfo);
+            this.groupRunawayReaction.Location = new System.Drawing.Point(10, 1260);
+            this.groupRunawayReaction.Name = "groupRunawayReaction";
+            this.groupRunawayReaction.Size = new System.Drawing.Size(350, 100);
+            this.groupRunawayReaction.TabIndex = 32;
+            this.groupRunawayReaction.TabStop = false;
+            this.groupRunawayReaction.Tag = "ScenarioDetail";
+            this.groupRunawayReaction.Text = "Runaway Reaction";
+            this.groupRunawayReaction.Visible = false;
+            //
+            // lblRunawayReactionInfo
+            //
+            this.lblRunawayReactionInfo.AutoSize = true;
+            this.lblRunawayReactionInfo.Location = new System.Drawing.Point(30, 43);
+            this.lblRunawayReactionInfo.Name = "lblRunawayReactionInfo";
+            this.lblRunawayReactionInfo.Size = new System.Drawing.Size(280, 40);
+            this.lblRunawayReactionInfo.TabIndex = 0;
+            this.lblRunawayReactionInfo.Text = "Sizing for this scenario is based on the\nuser-provided Required Flow Capacity.";
             //
             // groupBlockedOutlet
             //
@@ -3081,7 +3103,7 @@ namespace FERExcelAddIn
             this.groupBlockedOutlet.Controls.Add(this.cmbPumpType);
             this.groupBlockedOutlet.Controls.Add(this.lblPumpCurve);
             this.groupBlockedOutlet.Controls.Add(this.txtPumpCurve);
-            this.groupBlockedOutlet.Location = new System.Drawing.Point(10, 560);
+            this.groupBlockedOutlet.Location = new System.Drawing.Point(10, 660);
             this.groupBlockedOutlet.Name = "groupBlockedOutlet";
             this.groupBlockedOutlet.Size = new System.Drawing.Size(350, 150);
             this.groupBlockedOutlet.TabIndex = 29;
@@ -3540,5 +3562,7 @@ namespace FERExcelAddIn
         private System.Windows.Forms.TextBox txtTubeInnerDiameter;
         private System.Windows.Forms.Label lblDischargeCoefficient;
         private System.Windows.Forms.TextBox txtDischargeCoefficient;
+        private System.Windows.Forms.GroupBox groupRunawayReaction;
+        private System.Windows.Forms.Label lblRunawayReactionInfo;
     }
 }
