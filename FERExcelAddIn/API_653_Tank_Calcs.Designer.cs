@@ -31,7 +31,7 @@ namespace FERExcelAddIn
             this.components = new System.ComponentModel.Container();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabShellEval = new System.Windows.Forms.TabPage();
-            this.btnSolveForH = new System.Windows.Forms.Button();
+            this.btnCalculate = new System.Windows.Forms.Button();
             this.lblDiameter = new System.Windows.Forms.Label();
             this.txtDiameter = new System.Windows.Forms.TextBox();
             this.lblNumCourses = new System.Windows.Forms.Label();
@@ -44,7 +44,6 @@ namespace FERExcelAddIn
             this.txtTensileStrength = new System.Windows.Forms.TextBox();
             this.lblSpecificGravity = new System.Windows.Forms.Label();
             this.txtSpecificGravity = new System.Windows.Forms.TextBox();
-            this.btnCalculate = new System.Windows.Forms.Button();
             this.lblMaterial = new System.Windows.Forms.Label();
             this.cmbMaterial = new System.Windows.Forms.ComboBox();
             this.resultGrid = new System.Windows.Forms.DataGridView();
@@ -75,8 +74,10 @@ namespace FERExcelAddIn
             this.AllowableHt = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.MaxAllowableH = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.HydrotestVerification = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.MaxAllowableHVerification = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblKFactor = new System.Windows.Forms.Label();
             this.txtKFactor = new System.Windows.Forms.TextBox();
+            this.rtbFormulaDisplay = new System.Windows.Forms.RichTextBox();
             this.tabSettlementEval = new System.Windows.Forms.TabPage();
             this.grpSettlementBasicInfo = new System.Windows.Forms.GroupBox();
             this.lblSettlementDiameter = new System.Windows.Forms.Label();
@@ -189,15 +190,16 @@ namespace FERExcelAddIn
             this.tabControl1.Controls.Add(this.tabSettlementEval);
             this.tabControl1.Controls.Add(this.tabBottomEval);
             this.tabControl1.Controls.Add(this.tabLocalizedCorrosion);
+            this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(1060, 950);
+            this.tabControl1.Size = new System.Drawing.Size(1200, 1266);
             this.tabControl1.TabIndex = 0;
             //
             // tabShellEval
             //
-            this.tabShellEval.Controls.Add(this.btnSolveForH);
+            this.tabShellEval.Controls.Add(this.btnCalculate);
             this.tabShellEval.Controls.Add(this.lblDiameter);
             this.tabShellEval.Controls.Add(this.txtDiameter);
             this.tabShellEval.Controls.Add(this.lblNumCourses);
@@ -210,7 +212,6 @@ namespace FERExcelAddIn
             this.tabShellEval.Controls.Add(this.txtTensileStrength);
             this.tabShellEval.Controls.Add(this.lblSpecificGravity);
             this.tabShellEval.Controls.Add(this.txtSpecificGravity);
-            this.tabShellEval.Controls.Add(this.btnCalculate);
             this.tabShellEval.Controls.Add(this.lblMaterial);
             this.tabShellEval.Controls.Add(this.cmbMaterial);
             this.tabShellEval.Controls.Add(this.resultGrid);
@@ -232,23 +233,24 @@ namespace FERExcelAddIn
             this.tabShellEval.Controls.Add(this.hydroResultGrid);
             this.tabShellEval.Controls.Add(this.lblKFactor);
             this.tabShellEval.Controls.Add(this.txtKFactor);
+            this.tabShellEval.Controls.Add(this.rtbFormulaDisplay);
             this.tabShellEval.Location = new System.Drawing.Point(4, 29);
             this.tabShellEval.Name = "tabShellEval";
             this.tabShellEval.Padding = new System.Windows.Forms.Padding(3);
-            this.tabShellEval.Size = new System.Drawing.Size(1052, 917);
+            this.tabShellEval.Size = new System.Drawing.Size(1192, 1233);
             this.tabShellEval.TabIndex = 0;
             this.tabShellEval.Text = "Shell Evaluation";
             this.tabShellEval.UseVisualStyleBackColor = true;
             //
-            // btnSolveForH
+            // btnCalculate
             //
-            this.btnSolveForH.Location = new System.Drawing.Point(39, 815);
-            this.btnSolveForH.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnSolveForH.Name = "btnSolveForH";
-            this.btnSolveForH.Size = new System.Drawing.Size(250, 46);
-            this.btnSolveForH.TabIndex = 33;
-            this.btnSolveForH.Text = "Calc Max Liquid Height";
-            this.btnSolveForH.UseVisualStyleBackColor = true;
+            this.btnCalculate.Location = new System.Drawing.Point(39, 438);
+            this.btnCalculate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.btnCalculate.Name = "btnCalculate";
+            this.btnCalculate.Size = new System.Drawing.Size(450, 46);
+            this.btnCalculate.TabIndex = 15;
+            this.btnCalculate.Text = "Calculate Minimum Thickness";
+            this.btnCalculate.UseVisualStyleBackColor = true;
             //
             // lblDiameter
             //
@@ -372,16 +374,6 @@ namespace FERExcelAddIn
             this.txtSpecificGravity.TabIndex = 11;
             this.txtSpecificGravity.Text = "1.0";
             //
-            // btnCalculate
-            //
-            this.btnCalculate.Location = new System.Drawing.Point(39, 438);
-            this.btnCalculate.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.btnCalculate.Name = "btnCalculate";
-            this.btnCalculate.Size = new System.Drawing.Size(450, 46);
-            this.btnCalculate.TabIndex = 15;
-            this.btnCalculate.Text = "Calculate Minimum Thickness";
-            this.btnCalculate.UseVisualStyleBackColor = true;
-            //
             // lblMaterial
             //
             this.lblMaterial.AutoSize = true;
@@ -404,6 +396,8 @@ namespace FERExcelAddIn
             //
             // resultGrid
             //
+            this.resultGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.resultGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.resultGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.CourseNumber,
@@ -412,11 +406,11 @@ namespace FERExcelAddIn
             this.AllowableStress,
             this.StressBasis,
             this.TminVerification});
-            this.resultGrid.Location = new System.Drawing.Point(39, 493);
+            this.resultGrid.Location = new System.Drawing.Point(39, 505);
             this.resultGrid.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.resultGrid.Name = "resultGrid";
             this.resultGrid.RowHeadersWidth = 62;
-            this.resultGrid.Size = new System.Drawing.Size(985, 200);
+            this.resultGrid.Size = new System.Drawing.Size(1144, 200);
             this.resultGrid.TabIndex = 16;
             //
             // CourseNumber
@@ -441,7 +435,7 @@ namespace FERExcelAddIn
             this.MinThickness.MinimumWidth = 8;
             this.MinThickness.Name = "MinThickness";
             this.MinThickness.ReadOnly = true;
-            this.MinThickness.Width = 150;
+            this.MinThickness.Width = 75;
             //
             // AllowableStress
             //
@@ -449,7 +443,7 @@ namespace FERExcelAddIn
             this.AllowableStress.MinimumWidth = 8;
             this.AllowableStress.Name = "AllowableStress";
             this.AllowableStress.ReadOnly = true;
-            this.AllowableStress.Width = 150;
+            this.AllowableStress.Width = 80;
             //
             // StressBasis
             //
@@ -457,13 +451,14 @@ namespace FERExcelAddIn
             this.StressBasis.MinimumWidth = 8;
             this.StressBasis.Name = "StressBasis";
             this.StressBasis.ReadOnly = true;
-            this.StressBasis.Width = 400;
+            this.StressBasis.Width = 380;
             //
             // TminVerification
             //
+            this.TminVerification.HeaderText = "T-min Verification";
             this.TminVerification.MinimumWidth = 8;
             this.TminVerification.Name = "TminVerification";
-            this.TminVerification.Width = 150;
+            this.TminVerification.Width = 330;
             //
             // cmbStandard
             //
@@ -492,7 +487,7 @@ namespace FERExcelAddIn
             this.cmbJointType.Location = new System.Drawing.Point(261, 254);
             this.cmbJointType.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.cmbJointType.Name = "cmbJointType";
-            this.cmbJointType.Size = new System.Drawing.Size(300, 28);
+            this.cmbJointType.Size = new System.Drawing.Size(97, 28);
             this.cmbJointType.TabIndex = 21;
             //
             // cmbApplicability
@@ -584,12 +579,12 @@ namespace FERExcelAddIn
             //
             // btnCalculateHydro
             //
-            this.btnCalculateHydro.Location = new System.Drawing.Point(39, 703);
+            this.btnCalculateHydro.Location = new System.Drawing.Point(39, 698);
             this.btnCalculateHydro.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.btnCalculateHydro.Name = "btnCalculateHydro";
             this.btnCalculateHydro.Size = new System.Drawing.Size(250, 46);
             this.btnCalculateHydro.TabIndex = 31;
-            this.btnCalculateHydro.Text = "Calc Hydro Test Height";
+            this.btnCalculateHydro.Text = "Calculate Allowable Heights";
             this.btnCalculateHydro.UseVisualStyleBackColor = true;
             //
             // lblCorrosionAllowance
@@ -611,18 +606,19 @@ namespace FERExcelAddIn
             //
             // hydroResultGrid
             //
+            this.hydroResultGrid.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.hydroResultGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.hydroResultGrid.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.HydroCourseNumber,
             this.ActualThickness,
             this.AllowableHt,
-            this.MaxAllowableH,
-            this.HydrotestVerification});
-            this.hydroResultGrid.Location = new System.Drawing.Point(295, 703);
+            this.MaxAllowableH});
+            this.hydroResultGrid.Location = new System.Drawing.Point(39, 749);
             this.hydroResultGrid.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.hydroResultGrid.Name = "hydroResultGrid";
             this.hydroResultGrid.RowHeadersWidth = 62;
-            this.hydroResultGrid.Size = new System.Drawing.Size(729, 200);
+            this.hydroResultGrid.Size = new System.Drawing.Size(1144, 220);
             this.hydroResultGrid.TabIndex = 32;
             //
             // HydroCourseNumber
@@ -646,6 +642,7 @@ namespace FERExcelAddIn
             this.AllowableHt.MinimumWidth = 8;
             this.AllowableHt.Name = "AllowableHt";
             this.AllowableHt.ReadOnly = true;
+            this.AllowableHt.Width = 150;
             //
             // MaxAllowableH
             //
@@ -661,12 +658,20 @@ namespace FERExcelAddIn
             this.HydrotestVerification.MinimumWidth = 8;
             this.HydrotestVerification.Name = "HydrotestVerification";
             this.HydrotestVerification.ReadOnly = true;
-            this.HydrotestVerification.Width = 300;
+            this.HydrotestVerification.Width = 400;
+            //
+            // MaxAllowableHVerification
+            //
+            this.MaxAllowableHVerification.HeaderText = "Max H Verification";
+            this.MaxAllowableHVerification.MinimumWidth = 8;
+            this.MaxAllowableHVerification.Name = "MaxAllowableHVerification";
+            this.MaxAllowableHVerification.ReadOnly = true;
+            this.MaxAllowableHVerification.Width = 400;
             //
             // lblKFactor
             //
             this.lblKFactor.AutoSize = true;
-            this.lblKFactor.Location = new System.Drawing.Point(35, 415);
+            this.lblKFactor.Location = new System.Drawing.Point(369, 257);
             this.lblKFactor.Name = "lblKFactor";
             this.lblKFactor.Size = new System.Drawing.Size(135, 20);
             this.lblKFactor.TabIndex = 36;
@@ -675,12 +680,25 @@ namespace FERExcelAddIn
             //
             // txtKFactor
             //
-            this.txtKFactor.Location = new System.Drawing.Point(170, 412);
+            this.txtKFactor.Location = new System.Drawing.Point(510, 254);
             this.txtKFactor.Name = "txtKFactor";
-            this.txtKFactor.Size = new System.Drawing.Size(70, 26);
+            this.txtKFactor.Size = new System.Drawing.Size(51, 26);
             this.txtKFactor.TabIndex = 37;
             this.txtKFactor.Text = "1.0";
             this.txtKFactor.Visible = false;
+            //
+            // rtbFormulaDisplay
+            //
+            this.rtbFormulaDisplay.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.rtbFormulaDisplay.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rtbFormulaDisplay.Location = new System.Drawing.Point(39, 992);
+            this.rtbFormulaDisplay.Name = "rtbFormulaDisplay";
+            this.rtbFormulaDisplay.ReadOnly = true;
+            this.rtbFormulaDisplay.Size = new System.Drawing.Size(1144, 215);
+            this.rtbFormulaDisplay.TabIndex = 38;
+            this.rtbFormulaDisplay.Text = "Click on a row in the grids above to see detailed calculation formulas...";
             //
             // tabSettlementEval
             //
@@ -692,7 +710,7 @@ namespace FERExcelAddIn
             this.tabSettlementEval.Location = new System.Drawing.Point(4, 29);
             this.tabSettlementEval.Name = "tabSettlementEval";
             this.tabSettlementEval.Padding = new System.Windows.Forms.Padding(3);
-            this.tabSettlementEval.Size = new System.Drawing.Size(1052, 917);
+            this.tabSettlementEval.Size = new System.Drawing.Size(1192, 1233);
             this.tabSettlementEval.TabIndex = 1;
             this.tabSettlementEval.Text = "Settlement Evaluation";
             this.tabSettlementEval.UseVisualStyleBackColor = true;
@@ -985,7 +1003,7 @@ namespace FERExcelAddIn
             this.tabBottomEval.Controls.Add(this.grpMrt);
             this.tabBottomEval.Location = new System.Drawing.Point(4, 29);
             this.tabBottomEval.Name = "tabBottomEval";
-            this.tabBottomEval.Size = new System.Drawing.Size(1052, 917);
+            this.tabBottomEval.Size = new System.Drawing.Size(1192, 1233);
             this.tabBottomEval.TabIndex = 2;
             this.tabBottomEval.Text = "Bottom Evaluation";
             this.tabBottomEval.UseVisualStyleBackColor = true;
@@ -1379,7 +1397,7 @@ namespace FERExcelAddIn
             this.tabLocalizedCorrosion.Controls.Add(this.grpLocalizedCorrosion);
             this.tabLocalizedCorrosion.Location = new System.Drawing.Point(4, 29);
             this.tabLocalizedCorrosion.Name = "tabLocalizedCorrosion";
-            this.tabLocalizedCorrosion.Size = new System.Drawing.Size(1052, 917);
+            this.tabLocalizedCorrosion.Size = new System.Drawing.Size(1192, 1233);
             this.tabLocalizedCorrosion.TabIndex = 3;
             this.tabLocalizedCorrosion.Text = "Localized Corrosion";
             this.tabLocalizedCorrosion.UseVisualStyleBackColor = true;
@@ -1511,9 +1529,8 @@ namespace FERExcelAddIn
             //
             this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1094, 950);
+            this.ClientSize = new System.Drawing.Size(1200, 1266);
             this.Controls.Add(this.tabControl1);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
@@ -1590,12 +1607,10 @@ namespace FERExcelAddIn
         private System.Windows.Forms.ComboBox cmbNumRivets;
         private System.Windows.Forms.Button btnCalculateHydro;
         private System.Windows.Forms.DataGridView hydroResultGrid;
-        private System.Windows.Forms.Button btnSolveForH;
         private System.Windows.Forms.DataGridViewTextBoxColumn HydroCourseNumber;
         private System.Windows.Forms.DataGridViewTextBoxColumn ActualThickness;
         private System.Windows.Forms.DataGridViewTextBoxColumn AllowableHt;
         private System.Windows.Forms.DataGridViewTextBoxColumn MaxAllowableH;
-        private System.Windows.Forms.DataGridViewTextBoxColumn HydrotestVerification;
         private System.Windows.Forms.TabPage tabSettlementEval;
         private System.Windows.Forms.TabPage tabBottomEval;
         private System.Windows.Forms.TabPage tabLocalizedCorrosion;
@@ -1688,5 +1703,6 @@ namespace FERExcelAddIn
         private System.Windows.Forms.Label lblUnitUPr;
         private System.Windows.Forms.Label lblKFactor;
         private System.Windows.Forms.TextBox txtKFactor;
+        private System.Windows.Forms.RichTextBox rtbFormulaDisplay;
     }
 }

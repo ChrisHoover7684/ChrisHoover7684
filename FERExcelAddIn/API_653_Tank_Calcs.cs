@@ -13,6 +13,60 @@ namespace FERExcelAddIn
         private const int MaxCourses = 8;
         private double E = 1.0;
         private bool _isUpdatingCombos = false;
+        private Dictionary<int, CourseCalculationDetails> calcDetails = new Dictionary<int, CourseCalculationDetails>();
+
+        public class CourseCalculationDetails
+        {
+            public double D { get; set; }
+            public double G { get; set; }
+            public double Y_material { get; set; }
+            public double T_material { get; set; }
+            public double H_course { get; set; }
+            public double E { get; set; }
+            public double k_factor { get; set; }
+            public bool isLapB { get; set; }
+            public double ca { get; set; }
+            public double t_actual { get; set; }
+            public double S_yield_factor { get; set; }
+            public double S_tensile_factor { get; set; }
+            public double S_yield_based { get; set; }
+            public double S_tensile_based { get; set; }
+            public double S { get; set; }
+            public double AllowableStress { get; set; }
+            public double t_calculated { get; set; }
+            public double t_final { get; set; }
+            public double St_yield_factor { get; set; }
+            public double St_tensile_factor { get; set; }
+            public double St_yield_based { get; set; }
+            public double St_tensile_based { get; set; }
+            public double St { get; set; }
+            public double St_allowable { get; set; }
+            public double Ht { get; set; }
+            public double Hmax { get; set; }
+            public string E_formula { get; set; }
+            public string S_formula { get; set; }
+            public string t_min_formula { get; set; }
+            public string Ht_formula { get; set; }
+            public string Hmax_formula { get; set; }
+
+            public CourseCalculationDetails()
+            {
+                E_formula = S_formula = t_min_formula = Ht_formula = Hmax_formula = "N/A";
+            }
+
+            public string GetTminCalculationBlock()
+            {
+                return $"JOINT EFFICIENCY (E):\n{E_formula}\n\n" +
+                       $"STRESS (S):\n{S_formula}\n\n" +
+                       $"MINIMUM THICKNESS (t_min):\n{t_min_formula}";
+            }
+
+            public string GetHeightCalculationBlock()
+            {
+                return $"HYDROTEST HEIGHT (Ht):\n{Ht_formula}\n\n" +
+                       $"MAX PRODUCT HEIGHT (Hmax):\n{Hmax_formula}";
+            }
+        }
 
         private static readonly Dictionary<string, Dictionary<string, object>> MaterialData =
      new Dictionary<string, Dictionary<string, object>>(StringComparer.OrdinalIgnoreCase)
@@ -21,316 +75,176 @@ namespace FERExcelAddIn
          {
              ["Minimum Specified Yield Stress (Y)"] = 30000,
              ["Minimum Specified Tensile Strength (T)"] = 55000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 23600,
-             ["Allowable Product Stress (S) - Upper Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 27000
          },
          ["A285-C"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 30000,
              ["Minimum Specified Tensile Strength (T)"] = 55000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 23600,
-             ["Allowable Product Stress (S) - Upper Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 27000
          },
          ["A36"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 36000,
              ["Minimum Specified Tensile Strength (T)"] = 58000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 24900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 27400,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 27400,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 30100
          },
          ["A131-A, B, CS"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 34000,
              ["Minimum Specified Tensile Strength (T)"] = 58000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 24900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 27400,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 27400,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 30100
          },
          ["A131-EH 36"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 51000,
              ["Minimum Specified Tensile Strength (T)"] = 71000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 30500,
-             ["Allowable Product Stress (S) - Upper Courses"] = 33500,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33500,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36800
          },
          ["A573-58"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 32000,
              ["Minimum Specified Tensile Strength (T)"] = 58000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 24900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 27400,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 27400,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 28800
          },
          ["A573-65"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 35000,
              ["Minimum Specified Tensile Strength (T)"] = 65000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 27900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 31500
          },
          ["A573-70"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 42000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 30000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36300
          },
          ["A516-55"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 30000,
              ["Minimum Specified Tensile Strength (T)"] = 55000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 23800,
-             ["Allowable Product Stress (S) - Upper Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 27000
          },
          ["A516-60"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 32000,
              ["Minimum Specified Tensile Strength (T)"] = 60000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 25600,
-             ["Allowable Product Stress (S) - Upper Courses"] = 28200,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 28200,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 28800
          },
          ["A516-65"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 35000,
              ["Minimum Specified Tensile Strength (T)"] = 65000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 27900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 31500
          },
          ["A516-70"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 38000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 25500,
-             ["Allowable Product Stress (S) - Upper Courses"] = 25500,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 34200
          },
          ["A662-C"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 40000,
              ["Minimum Specified Tensile Strength (T)"] = 65000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 27900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 33700
          },
          ["A682-C"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 43000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 25500,
-             ["Allowable Product Stress (S) - Upper Courses"] = 25500,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36300
          },
          ["A637-Class 1"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 50000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 30000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36300
          },
          ["A637-Class 2"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 60000,
              ["Minimum Specified Tensile Strength (T)"] = 80000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 34300,
-             ["Allowable Product Stress (S) - Upper Courses"] = 37800,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 37800,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 41500
          },
          ["A633-C, D"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 50000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 30000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36300
          },
          ["A678-A"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 50000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 30000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36300
          },
          ["A678-B"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 60000,
              ["Minimum Specified Tensile Strength (T)"] = 80000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 34300,
-             ["Allowable Product Stress (S) - Upper Courses"] = 37800,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 37800,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 41500
          },
          ["A737-B"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 50000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 30000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36300
          },
          ["A841"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 50000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 30000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36300
          },
          ["A10"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 30000,
              ["Minimum Specified Tensile Strength (T)"] = 55000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 23600,
-             ["Allowable Product Stress (S) - Upper Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 27000
          },
          ["A7"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 33000,
              ["Minimum Specified Tensile Strength (T)"] = 60000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 25700,
-             ["Allowable Product Stress (S) - Upper Courses"] = 28300,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 28300,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 29700
          },
          ["A442-56"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 30000,
              ["Minimum Specified Tensile Strength (T)"] = 55000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 23600,
-             ["Allowable Product Stress (S) - Upper Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 27000
          },
          ["A442-60"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 32000,
              ["Minimum Specified Tensile Strength (T)"] = 60000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 25600,
-             ["Allowable Product Stress (S) - Upper Courses"] = 28200,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 28200,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 28800
          },
          ["G40.21, 38W"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 38000,
              ["Minimum Specified Tensile Strength (T)"] = 60000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 25700,
-             ["Allowable Product Stress (S) - Upper Courses"] = 28300,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 28300,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 31100
          },
          ["G40.21, 44W (Note 7)"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 44000,
              ["Minimum Specified Tensile Strength (T)"] = 65000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 27900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 33700
          },
          ["G40.21, 44W (Note 8)"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 44000,
              ["Minimum Specified Tensile Strength (T)"] = 64000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 27400,
-             ["Allowable Product Stress (S) - Upper Courses"] = 30200,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 33200
          },
          ["G40.21, 50W"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 50000,
              ["Minimum Specified Tensile Strength (T)"] = 65000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 27900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 33700
          },
          ["G40.21, 50WT (Note 7)"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 50000,
              ["Minimum Specified Tensile Strength (T)"] = 70000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 30000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 33000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 36300
          },
          ["G40.21, 50WT (Note 8)"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 50000,
              ["Minimum Specified Tensile Strength (T)"] = 65000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 27900,
-             ["Allowable Product Stress (S) - Upper Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 30700,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 33700
          },
          ["Unknown Material Specification and Grade"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = 30000,
              ["Minimum Specified Tensile Strength (T)"] = 55000,
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 23600,
-             ["Allowable Product Stress (S) - Upper Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 26000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 27000
          },
          ["Riveted Tanks: A7, A9 or A10"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = "NA",
              ["Minimum Specified Tensile Strength (T)"] = "NA",
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 21000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 21000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 21000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 21000
          },
          ["Riveted Tanks: Known"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = "Y",
              ["Minimum Specified Tensile Strength (T)"] = "T",
-             ["Allowable Product Stress (S) - Lower Two Courses"] = "Note 4",
-             ["Allowable Product Stress (S) - Upper Courses"] = "Note 4",
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = "Note 4",
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = "Note 4"
          },
          ["Riveted Tanks: Unknown"] = new Dictionary<string, object>
          {
              ["Minimum Specified Yield Stress (Y)"] = "NA",
              ["Minimum Specified Tensile Strength (T)"] = "NA",
-             ["Allowable Product Stress (S) - Lower Two Courses"] = 21000,
-             ["Allowable Product Stress (S) - Upper Courses"] = 21000,
-             ["Allowable Hydrostatic Test Stress (St) - Lower Two Courses"] = 21000,
-             ["Allowable Hydrostatic Test Stress (St) - Upper Courses"] = 21000
          }
      };
         private static readonly Dictionary<string, Dictionary<string, object>> JointEfficiencyData =
@@ -666,25 +580,48 @@ namespace FERExcelAddIn
         {
             if (_isUpdatingCombos || cmbJointType.SelectedItem == null) return;
 
-            string selectedJointTypeStr = cmbJointType.SelectedItem.ToString();
-
-            // Show/hide k-factor controls
-            bool needsKFactor = selectedJointTypeStr.Contains("Lap (b)");
-            lblKFactor.Visible = needsKFactor;
-            txtKFactor.Visible = needsKFactor;
-            if (needsKFactor)
-            {
-                // Set a default value if the box is empty, otherwise leave the user's value.
-                if (string.IsNullOrWhiteSpace(txtKFactor.Text))
-                {
-                    txtKFactor.Text = "0.0";
-                }
-            }
-
-            _isUpdatingCombos = true;
-            string selectedStandard = cmbStandard.SelectedItem.ToString();
+            string selectedStandard = cmbStandard.SelectedItem?.ToString() ?? "";
+            string selectedEdition = cmbEdition.SelectedItem?.ToString() ?? "";
             string selectedJointType = cmbJointType.SelectedItem.ToString();
 
+            // K-Factor Visibility and Help Text Logic
+            bool isApi12CLapB = selectedStandard == "API 12C" &&
+                                selectedEdition == "1st and 2nd (1936-1939)" &&
+                                selectedJointType == "Lap (b)";
+            bool isUnknownLapB = selectedStandard == "Unknown" &&
+                                 string.IsNullOrEmpty(selectedEdition) &&
+                                 selectedJointType == "Lap (b)";
+
+            bool needsKFactor = isApi12CLapB || isUnknownLapB;
+            lblKFactor.Visible = needsKFactor;
+            txtKFactor.Visible = needsKFactor;
+
+            if (needsKFactor)
+            {
+                if (isApi12CLapB)
+                {
+                    toolTip1.SetToolTip(txtKFactor, "Enter k-factor (intermittent weld percentage).\nMust be between 0.25 and 1.0.");
+                    if (string.IsNullOrWhiteSpace(txtKFactor.Text) || !double.TryParse(txtKFactor.Text, out double k) || k < 0.25)
+                    {
+                        txtKFactor.Text = "0.25";
+                    }
+                }
+                else // isUnknownLapB
+                {
+                    toolTip1.SetToolTip(txtKFactor, "Enter k-factor (intermittent weld percentage).\nMust be between 0.0 and 1.0.");
+                    if (string.IsNullOrWhiteSpace(txtKFactor.Text))
+                    {
+                        txtKFactor.Text = "0.0";
+                    }
+                }
+            }
+            else
+            {
+                toolTip1.SetToolTip(txtKFactor, null);
+            }
+
+
+            _isUpdatingCombos = true;
             cmbApplicability.DataSource = null;
             cmbNumRivets.DataSource = null;
 
@@ -701,7 +638,6 @@ namespace FERExcelAddIn
             }
             else
             {
-                string selectedEdition = cmbEdition.SelectedItem.ToString();
                 var limits = JointEfficiencyData.Values
                     .Where(props => props["Grouping"].ToString() == selectedStandard &&
                                     props["Edition"].ToString() == selectedEdition &&
@@ -779,10 +715,29 @@ namespace FERExcelAddIn
 
         private void txtKFactor_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (!double.TryParse(txtKFactor.Text, out double k) || k < 0 || k > 1)
+            if (!double.TryParse(txtKFactor.Text, out double k))
             {
-                MessageBox.Show("Invalid k-factor. Please enter a decimal value between 0.0 and 1.0.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                e.Cancel = true; // Prevent the user from leaving the control
+                MessageBox.Show("Invalid k-factor. Please enter a numeric value.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true;
+                return;
+            }
+
+            string selectedStandard = cmbStandard.SelectedItem?.ToString() ?? "";
+            string selectedEdition = cmbEdition.SelectedItem?.ToString() ?? "";
+
+            double minK = 0.0;
+            string rangeMessage = "0.0 and 1.0";
+
+            if (selectedStandard == "API 12C" && selectedEdition == "1st and 2nd (1936-1939)")
+            {
+                minK = 0.25;
+                rangeMessage = "0.25 and 1.0";
+            }
+
+            if (k < minK || k > 1.0)
+            {
+                MessageBox.Show($"Invalid k-factor. For the selected standard, the value must be between {rangeMessage}.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                e.Cancel = true;
             }
         }
 
@@ -841,7 +796,6 @@ namespace FERExcelAddIn
             btnGenerateHeightInputs.Click += GenerateHeightInputs;
             btnCalculate.Click += CalculateAllCourses;
             btnCalculateHydro.Click += btnCalculateHydro_Click;
-            btnSolveForH.Click += btnSolveForH_Click;
 
             InitializeMaterialDropdown();
 
@@ -860,6 +814,11 @@ namespace FERExcelAddIn
             chkBottomCoated.CheckedChanged += chkBottomCoated_CheckedChanged;
             txtKFactor.Validating += txtKFactor_Validating;
             txtKFactor.Validated += txtKFactor_Validated;
+
+            // Add event handlers for formula display
+            resultGrid.SelectionChanged += Grid_SelectionChanged;
+            hydroResultGrid.SelectionChanged += Grid_SelectionChanged;
+
 
             InitializeSettlementTab();
             InitializeMrtDropdown();
@@ -1049,6 +1008,39 @@ namespace FERExcelAddIn
             }
         }
 
+        private (double stress, double yield_factor, double tensile_factor) GetAllowableStress(int courseNumber, double Y_material, double T_material, bool isHydrotest, string apiEdition)
+        {
+            double yield_factor;
+            double tensile_factor;
+
+            if (isHydrotest)
+            {
+                // Per user spec, hydrotest stress does not depend on API edition
+                yield_factor = (courseNumber <= 2) ? 0.88 : 0.90;
+                tensile_factor = (courseNumber <= 2) ? 0.472 : 0.519;
+            }
+            else // Product stress
+            {
+                if (courseNumber <= 2) // Lower courses
+                {
+                    yield_factor = 0.80;
+                    tensile_factor = 0.429;
+                }
+                else // Upper courses (3+)
+                {
+                    // Check if the standard is API 650 7th Ed or later
+                    bool is7thEditionOrLater = apiEdition == "7th and Later (1980-Present)";
+                    yield_factor = is7thEditionOrLater ? 0.88 : 0.83;
+                    tensile_factor = 0.472; // Same for both pre- and post-7th ed upper courses
+                }
+            }
+
+            double yield_based = yield_factor * Y_material;
+            double tensile_based = tensile_factor * T_material;
+            double stress = Math.Min(yield_based, tensile_based);
+            return (stress, yield_factor, tensile_factor);
+        }
+
         /// <summary>
         /// Calculates the minimum required shell thickness for each course and populates the result grid.
         /// </summary>
@@ -1059,6 +1051,9 @@ namespace FERExcelAddIn
             if (!ValidateInputs()) return;
             try
             {
+                calcDetails.Clear();
+                rtbFormulaDisplay.Text = "Click on a row in the grids above to see detailed calculation formulas...";
+
                 if (heightInputs.Count == 0)
                 {
                     MessageBox.Show("Please generate height inputs first");
@@ -1080,110 +1075,76 @@ namespace FERExcelAddIn
 
                 resultGrid.Rows.Clear();
 
-                // Parse input values
-                double D = double.Parse(txtDiameter.Text);
-                double G = double.Parse(txtSpecificGravity.Text);
-                double ca = double.Parse(txtCorrosionAllowance.Text);
+                double D_val = double.Parse(txtDiameter.Text);
+                double G_val = double.Parse(txtSpecificGravity.Text);
+                double ca_val = double.Parse(txtCorrosionAllowance.Text);
+                string selectedEdition = cmbEdition.SelectedItem?.ToString() ?? "";
 
-                // Per API 653, T shall be the smaller of specified T or 80,000 psi
-                double T_material = Convert.ToDouble(materialProps["Minimum Specified Tensile Strength (T)"]);
-                if (T_material > 80000) T_material = 80000;
-
-                double Y_material = Convert.ToDouble(materialProps["Minimum Specified Yield Stress (Y)"]);
+                double T_material_val = Convert.ToDouble(materialProps["Minimum Specified Tensile Strength (T)"]);
+                if (T_material_val > 80000) T_material_val = 80000;
+                double Y_material_val = Convert.ToDouble(materialProps["Minimum Specified Yield Stress (Y)"]);
 
                 int totalCourses = heightInputs.Count;
-                bool fallbackUsed = false;
-
-                // First, calculate total liquid height
-                double totalLiquidHeight = 0;
-                foreach (var heightInput in heightInputs)
-                {
-                    if (double.TryParse(heightInput.Text, out double h))
-                    {
-                        totalLiquidHeight += h;
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid height value entered.");
-                        return;
-                    }
-                }
+                double totalLiquidHeight = heightInputs.Sum(h => double.TryParse(h.Text, out double val) ? val : 0);
 
                 double heightFromBottom = 0;
-                // Loop from bottom course to top course
                 for (int i = 0; i < totalCourses; i++)
                 {
                     int courseNumber = i + 1;
-                    if (!double.TryParse(heightInputs[i].Text, out double courseHeight) ||
-                        !double.TryParse(efficiencyInputs[i].Text, out double courseE))
+                    if (!double.TryParse(efficiencyInputs[i].Text, out double courseE) || !double.TryParse(heightInputs[i].Text, out double courseHeight))
                     {
                         MessageBox.Show($"Invalid input for Course {courseNumber}");
                         return;
                     }
 
-                    double H_course = totalLiquidHeight - heightFromBottom;
-                    if (H_course < 1.0) H_course = 1.0; // Min height for H-1 calc is 1 ft.
-
-                    string stressBasis;
-                    double S_unefficiencied;
-                    string courseType = (courseNumber <= 2) ? "Lower" : "Upper";
-                    string stressKey = (courseNumber <= 2) ? "Allowable Product Stress (S) - Lower Two Courses" : "Allowable Product Stress (S) - Upper Courses";
-
-                    string efficiencyString = courseE.ToString("0.00");
-                    if (lblKFactor.Visible)
+                    var details = new CourseCalculationDetails
                     {
-                        efficiencyString = $"(0.50 + {txtKFactor.Text}/5)";
-                    }
+                        D = D_val, G = G_val, ca = ca_val, Y_material = Y_material_val, T_material = T_material_val, E = courseE
+                    };
 
-                    // New logic: Prioritize Table 4.1 (MaterialData)
-                    if (materialProps.ContainsKey(stressKey) && double.TryParse(materialProps[stressKey].ToString(), out S_unefficiencied))
+                    details.H_course = totalLiquidHeight - heightFromBottom;
+                    if (details.H_course < 1.0) details.H_course = 1.0;
+
+                    var (S, s_yield, s_tensile) = GetAllowableStress(courseNumber, details.Y_material, details.T_material, false, selectedEdition);
+                    details.S = S;
+                    details.S_yield_factor = s_yield;
+                    details.S_tensile_factor = s_tensile;
+                    details.S_yield_based = details.S_yield_factor * details.Y_material;
+                    details.S_tensile_based = details.S_tensile_factor * details.T_material;
+                    details.AllowableStress = details.S * details.E;
+
+                    details.isLapB = (cmbJointType.SelectedItem?.ToString() ?? "") == "Lap (b)";
+                    if (details.isLapB)
                     {
-                        stressBasis = $"Table 4.1 ({S_unefficiencied:F0}) × {efficiencyString} ({courseType})";
+                        double.TryParse(txtKFactor.Text, out double k_val);
+                        details.k_factor = k_val;
                     }
-                    else // Fallback to first principles
-                    {
-                        fallbackUsed = true;
-                        double s_yield_based = (2.0 / 3.0) * Y_material;
-                        double s_tensile_based = (2.0 / 5.0) * T_material;
+                    details.E_formula = details.isLapB ? $"0.50 + (k/5) = 0.50 + ({details.k_factor:F2}/5) = {details.E:F2}" : $"{details.E:F2} (from table)";
+                    details.S_formula = $"min({details.S_yield_factor:F2}*Y, {details.S_tensile_factor:F3}*T) * E = min({details.S_yield_based:F0}, {details.S_tensile_based:F0}) * {details.E:F2} = {details.AllowableStress:F0} psi";
 
-                        if (s_tensile_based <= s_yield_based)
-                        {
-                            S_unefficiencied = s_tensile_based;
-                            stressBasis = $"Calculated: 2/5×T×E = 2/5×{T_material:F0}×{efficiencyString} (governing)";
-                        }
-                        else
-                        {
-                            S_unefficiencied = s_yield_based;
-                            stressBasis = $"Calculated: 2/3×Y×E = 2/3×{Y_material:F0}×{efficiencyString}";
-                        }
-                    }
+                    details.t_calculated = (2.6 * details.D * (details.H_course - 1) * details.G) / details.AllowableStress;
+                    double t_with_min_rule = Math.Max(details.t_calculated, 0.1);
+                    details.t_final = t_with_min_rule + details.ca;
+                    details.t_min_formula = $"max([2.6*(H-1)*D*G]/S, 0.1) + CA = max([2.6*({details.H_course:F2}-1)*{details.D}*{details.G}]/{details.AllowableStress:F0}, 0.1) + {details.ca:F3} = {details.t_final:F4}\"";
 
-                    double allowableStress = S_unefficiencied * courseE;
-                    // Apply "double E" as per user's step-by-step calculation
-                    double t_calculated = (2.6 * D * (H_course - 1) * G) / (allowableStress * courseE);
-                    double t_final = t_calculated + ca;
-                    double t_rounded = Math.Round(t_final, 3); // Round to 3 decimal places
+                    string note = (t_with_min_rule == 0.1 && details.t_calculated < 0.1) ? " (0.1\" minimum enforced)" : "";
 
-                    string verificationFormula = $"((2.6 * ({H_course:F2}ft - 1) * {D:F2}ft * {G}) / ({allowableStress:F0}psi * {courseE:F2})) + {ca:F4}\" = {t_rounded:F3}\"";
+                    string stressBasisText = $"min({details.S_yield_factor:F2}*Y, {details.S_tensile_factor:F3}*T) * E";
+                    string tminVerText = (t_with_min_rule == 0.1 && details.t_calculated < 0.1) ? "0.1\" minimum enforced" : "";
 
                     resultGrid.Rows.Add(
                         courseNumber,
-                        courseHeight.ToString("0.00"),
-                        t_rounded.ToString("0.000"),
-                        allowableStress.ToString("0"),
-                        stressBasis,
-                        verificationFormula
+                        courseHeight.ToString("F2"),
+                        details.t_final.ToString("F4"),
+                        details.AllowableStress.ToString("F0"),
+                        stressBasisText,
+                        tminVerText
                     );
 
+                    calcDetails[courseNumber] = details;
                     heightFromBottom += courseHeight;
                 }
 
-                if (fallbackUsed)
-                {
-                    MessageBox.Show("Material not in Table 4.1 - Using calculated stress values.", "Fallback Calculation", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
-                // Prepare the hydroResultGrid for user input
                 hydroResultGrid.Rows.Clear();
                 foreach (DataGridViewRow row in resultGrid.Rows)
                 {
@@ -1197,8 +1158,34 @@ namespace FERExcelAddIn
             }
         }
 
+        private void Grid_SelectionChanged(object sender, EventArgs e)
+        {
+            var grid = sender as DataGridView;
+            if (grid == null || grid.CurrentRow == null) return;
+
+            int courseNumber = Convert.ToInt32(grid.CurrentRow.Cells[0].Value);
+            if (calcDetails.TryGetValue(courseNumber, out var details))
+            {
+                if (grid == resultGrid)
+                {
+                    rtbFormulaDisplay.Text = details.GetTminCalculationBlock();
+                }
+                else // hydroResultGrid
+                {
+                    if (string.IsNullOrEmpty(details.Ht_formula) || details.Ht_formula == "N/A")
+                    {
+                        rtbFormulaDisplay.Text = "Calculate Allowable Heights to see formula details for this course.";
+                    }
+                    else
+                    {
+                        rtbFormulaDisplay.Text = details.GetHeightCalculationBlock();
+                    }
+                }
+            }
+        }
+
         /// <summary>
-        /// Calculates the maximum allowable hydrostatic test height for each course and populates the hydrotest result grid.
+        /// Calculates the maximum allowable hydrostatic test height and product height for each course.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -1207,149 +1194,69 @@ namespace FERExcelAddIn
             if (!ValidateInputs()) return;
             try
             {
-                if (cmbMaterial.SelectedItem == null)
-                {
-                    MessageBox.Show("Please select a material first.");
-                    return;
-                }
-
-                if (resultGrid.Rows.Count == 0)
+                if (resultGrid.Rows.Count == 0 || calcDetails.Count == 0)
                 {
                     MessageBox.Show("Please calculate minimum thickness first.");
                     return;
                 }
 
-                string selectedMaterial = cmbMaterial.SelectedItem.ToString();
-                if (!MaterialData.TryGetValue(selectedMaterial, out var materialProps))
-                {
-                    MessageBox.Show("Invalid material selected");
-                    return;
-                }
-
-                double D = double.Parse(txtDiameter.Text);
-                double ca = double.Parse(txtCorrosionAllowance.Text);
-
                 foreach (DataGridViewRow row in hydroResultGrid.Rows)
                 {
                     if (row.IsNewRow) continue;
-
                     int courseNumber = Convert.ToInt32(row.Cells["HydroCourseNumber"].Value);
+                    if (!calcDetails.TryGetValue(courseNumber, out var details)) continue;
 
                     if (row.Cells["ActualThickness"].Value == null ||
-                        !double.TryParse(row.Cells["ActualThickness"].Value.ToString(), out double t_actual))
+                        !double.TryParse(row.Cells["ActualThickness"].Value.ToString(), out double t_actual_local))
                     {
                         MessageBox.Show($"Please enter a valid actual thickness for Course {courseNumber}.");
                         return;
                     }
+                    details.t_actual = t_actual_local;
 
-                    // Per user report, check if actual thickness is sufficient
-                    double t_min_required = double.Parse(resultGrid.Rows[row.Index].Cells["MinThickness"].Value.ToString());
-                    if (t_actual < t_min_required)
+                    if (details.t_actual < details.t_final)
                     {
-                        MessageBox.Show($"Actual thickness for Course {courseNumber} ({t_actual:F4}\") is less than the minimum required thickness ({t_min_required:F4}\").", "Thickness Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Actual thickness for Course {courseNumber} ({details.t_actual:F4}\") is less than the minimum required thickness ({details.t_final:F4}\").", "Thickness Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         row.Cells["AllowableHt"].Value = "Error";
-                        continue;
-                    }
-
-                    double courseE = double.Parse(efficiencyInputs[courseNumber - 1].Text);
-
-                    // Per user request, use Product Design Stress for Hydrotest calculation.
-                    double S_product = double.Parse(resultGrid.Rows[row.Index].Cells["AllowableStress"].Value.ToString());
-
-                    // Note: Per user report, t_actual is used directly, without subtracting corrosion allowance for hydrotest height.
-                    double t_available = t_actual;
-
-                    // Ht = (S * E * t_available) / (2.6 * D)
-                    double Ht = (S_product * courseE * t_available) / (2.6 * D);
-
-                    row.Cells["AllowableHt"].Value = Ht.ToString("0.00");
-
-                    // Verification Formula
-                    string hydroVerificationFormula = $"({t_available:F3}\" * {S_product:F0}psi * {courseE:F2}) / (2.6 * {D:F2}ft) = {Ht:F2}ft";
-                    var verificationCell = row.Cells["HydrotestVerification"];
-
-                    verificationCell.Value = hydroVerificationFormula;
-                    verificationCell.Style.ForeColor = Color.Black;
-                    verificationCell.ToolTipText = "";
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error in hydrostatic calculation: {ex.Message}");
-            }
-        }
-
-        /// <summary>
-        /// Calculates the maximum allowable liquid height for each course based on its actual thickness and populates the hydrotest result grid.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnSolveForH_Click(object sender, EventArgs e)
-        {
-            if (!ValidateInputs()) return;
-            try
-            {
-                if (cmbMaterial.SelectedItem == null)
-                {
-                    MessageBox.Show("Please select a material first.");
-                    return;
-                }
-
-                if (resultGrid.Rows.Count == 0)
-                {
-                    MessageBox.Show("Please calculate minimum thickness first.");
-                    return;
-                }
-
-                string selectedMaterial = cmbMaterial.SelectedItem.ToString();
-                if (!MaterialData.TryGetValue(selectedMaterial, out var materialProps))
-                {
-                    MessageBox.Show("Invalid material selected");
-                    return;
-                }
-
-                double D = double.Parse(txtDiameter.Text);
-                double G = double.Parse(txtSpecificGravity.Text);
-                double ca = double.Parse(txtCorrosionAllowance.Text);
-
-                foreach (DataGridViewRow row in hydroResultGrid.Rows)
-                {
-                    if (row.IsNewRow) continue;
-
-                    int courseNumber = Convert.ToInt32(row.Cells["HydroCourseNumber"].Value);
-
-                    if (row.Cells["ActualThickness"].Value == null ||
-                        !double.TryParse(row.Cells["ActualThickness"].Value.ToString(), out double t_actual))
-                    {
-                        MessageBox.Show($"Please enter a valid actual thickness for Course {courseNumber}.");
-                        return;
-                    }
-
-                    double t_available = t_actual - ca;
-                    if (t_available <= 0)
-                    {
-                        MessageBox.Show($"Actual thickness for Course {courseNumber} must be greater than corrosion allowance.");
                         row.Cells["MaxAllowableH"].Value = "Error";
                         continue;
                     }
 
-                    double courseE = double.Parse(efficiencyInputs[courseNumber - 1].Text);
+                    string selectedJointType = cmbJointType.SelectedItem?.ToString() ?? "";
+                    if (selectedJointType == "Lap (b)" && details.t_actual > 0.25)
+                    {
+                        row.Cells["AllowableHt"].Value = "Error";
+                        row.Cells["MaxAllowableH"].Value = "Error";
+                        continue;
+                    }
 
-                    string stressKey = (courseNumber == 1 || courseNumber == 2) ?
-                        "Allowable Product Stress (S) - Lower Two Courses" :
-                        "Allowable Product Stress (S) - Upper Courses";
+                    string selectedEdition = cmbEdition.SelectedItem?.ToString() ?? "";
 
-                    double S = Convert.ToDouble(materialProps[stressKey]);
+                    var (St, st_yield, st_tensile) = GetAllowableStress(courseNumber, details.Y_material, details.T_material, true, selectedEdition);
+                    details.St = St;
+                    details.St_yield_factor = st_yield;
+                    details.St_tensile_factor = st_tensile;
+                    details.St_yield_based = st_yield * details.Y_material;
+                    details.St_tensile_based = st_tensile * details.T_material;
+                    details.St_allowable = details.St * details.E;
+                    details.Ht = (details.St_allowable * details.t_actual) / (2.6 * details.D);
+                    row.Cells["AllowableHt"].Value = details.Ht.ToString("0.00");
 
-                    // H = ((t_available * S * E) / (2.6 * D * G)) + 1
-                    double H = ((t_available * S * courseE) / (2.6 * D * G)) + 1.0;
+                    // S values are already in details object from previous calculation
+                    details.Hmax = (details.AllowableStress * details.t_actual) / (2.6 * details.D * details.G);
+                    row.Cells["MaxAllowableH"].Value = details.Hmax.ToString("0.00");
 
-                    row.Cells["MaxAllowableH"].Value = H.ToString("0.00");
+                    details.Ht_formula = $"(St*E*t_actual)/(2.6*D) = ({details.St_allowable:F0}*{details.t_actual:F4})/(2.6*{details.D}) = {details.Ht:F2} ft\n" +
+                                         $"  where St = min({details.St_yield_factor:F2}*Y, {details.St_tensile_factor:F3}*T) = min({details.St_yield_based:F0}, {details.St_tensile_based:F0})";
+                    details.Hmax_formula = $"(S*E*t_actual)/(2.6*D*G) = ({details.AllowableStress:F0}*{details.t_actual:F4})/(2.6*{details.D}*{details.G}) = {details.Hmax:F2} ft";
                 }
+
+                // Refresh the details display if a cell is selected
+                Grid_SelectionChanged(hydroResultGrid, EventArgs.Empty);
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Error in calculating max allowable height: {ex.Message}");
+                MessageBox.Show($"Error in height calculations: {ex.Message}");
             }
         }
 
@@ -1673,7 +1580,6 @@ namespace FERExcelAddIn
                 "2. For other materials:\n" +
                 "   - Allowable Stress = min(2/3×Y×E, 2/5×T×E)");
             toolTip1.SetToolTip(btnCalculateHydro, "Calculate the maximum allowable hydrostatic test height for each course.");
-            toolTip1.SetToolTip(btnSolveForH, "Calculate the maximum allowable liquid height for each course based on the actual thickness.");
 
             // Bottom Evaluation - MRT
             toolTip1.SetToolTip(txtRTbc, "Minimum remaining thickness on the bottom side, in inches. (RTbc)");
